@@ -1,0 +1,73 @@
+---
+title: "Methods"
+output: html_document
+date: "2026-05-11"
+---
+
+
+## R Markdown
+
+```{r}
+# Libraries needed
+library(tidymodels)
+library(pROC)
+library(dplyr)
+
+# Import the dataset
+data <- read.csv("/Users/brigettemahoney/Desktop/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
+
+# make the target variable (diabetes) binary 
+data$Diabetes_binary <- as.factor(data$Diabetes_binary)
+
+# Split data into 80/20 train/split
+set.seed(123)
+splits <- initial_split(data, prop = 0.8, strata = Diabetes_binary)
+train_data <- training(splits)
+test_data <- testing(splits)
+
+# Fit the logistic regression on ALL features
+log_model <- logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(Diabetes_binary ~ ., data = train_data)
+
+# Predict and compute all probabilities
+predictions <- predict(log_model, new_data = test_data)
+probs <- predict(log_model, new_data = test_data, type = "prob")
+
+# Compute the Accuracy 
+accuracy <- mean(predictions$.pred_class == test_data$Diabetes_binary)
+print(paste("Accuracy:", round(accuracy, 3)))
+
+# Compute the AUC
+roc_curve <- roc(test_data$Diabetes_binary, probs$.pred_1)
+print(paste("AUC:", round(auc(roc_curve), 3)))
+
+# Print all of the significant coefficients
+tidy(log_model) %>% filter(p.value < 0.05) %>% arrange(desc(abs(estimate)))
+
+# ROC plot
+plot(roc_curve)
+
+```
+
+## Lasso Regression
+
+You can also embed plots, for example:
+
+```{r}
+# Run Lasso Regularization
+
+lasso_model <- logistic_reg(penalty = 0.1, mixture = 1) %>%
+  set_engine("glmnet") %>%
+  fit(Diabetes_binary ~ ., data = train_data)
+
+tidy(lasso_model) %>%
+  filter(estimate != 0) %>%
+  arrange(desc(abs(estimate)))
+
+```
+
+
+```{r}
+
+```

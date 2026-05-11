@@ -1,0 +1,19 @@
+name: "SOC10_FinalProject"
+navbar:
+  title: "Diabetes Risk"
+  left:
+    - text: "Introduction"
+      href: index.Rmd
+    - text: "Data"
+      href: Data.Rmd
+    - text: "Methods"
+      href: Methods.Rmd
+    - text: "Results"
+      href: Results.Rmd
+    - text: "Conclusion"
+      href: Conclusion.Rmd
+    - text: "Risk Calculator"
+      href: Quiz.Rmd
+output:
+  html_document:
+    theme: flatly
