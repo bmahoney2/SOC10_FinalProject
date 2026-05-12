@@ -4,17 +4,17 @@ navbar:
   title: "Diabetes Risk"
   left:
     - text: "Introduction"
-      href: index.Rmd
+      href: index.html
     - text: "Data"
-      href: Data.Rmd
+      href: Data.html
     - text: "Methods"
-      href: Methods.Rmd
+      href: Methods.html
     - text: "Results"
-      href: Results.Rmd
+      href: Results.html
     - text: "Conclusion"
-      href: Conclusion.Rmd
+      href: Conclusion.html
     - text: "Risk Calculator"
-      href: Quiz.Rmd
+      href: Quiz.html
 output: 
   html_document:
     theme: flatly
