@@ -1,4 +1,5 @@
 name: "SOC10_FinalProject"
+output_dir: "docs"
 navbar:
   title: "Diabetes Risk"
   left:
@@ -14,6 +15,6 @@ navbar:
       href: Conclusion.Rmd
     - text: "Risk Calculator"
       href: Quiz.Rmd
-output:
+output: 
   html_document:
     theme: flatly
