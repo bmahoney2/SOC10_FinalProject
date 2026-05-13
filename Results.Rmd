@@ -2,3 +2,80 @@
 title: "Results"
 output: html_document
 ---
+
+```{r}
+library(tidymodels)
+library(pROC)
+library(dplyr)
+
+log_model <- readRDS("log_model.rds")
+lasso_model <- readRDS("lasso_model.rds")
+rf_fit <- readRDS("rf_model.rds")
+log_probs <- readRDS("log_probs.rds")
+lasso_probs <- readRDS("lasso_probs.rds")
+rf_probs <- readRDS("rf_probs.rds")
+log_roc <- readRDS("log_roc.rds")
+rf_roc <- readRDS("rf_roc.rds")
+log_acc <- readRDS("log_acc.rds")
+
+```
+
+```{r}
+# Source: https://statsandr.com/blog/binary-logistic-regression-in-r/ 
+
+# create predicted probabilities
+preds <- predict(extract_fit_engine(log_model),
+  newdata = select(test_data, -Diabetes_binary),
+  type = "response"
+)
+
+# if probability is BELOW the threshold, patient is considered to NOT have diabetes
+preds_outcome <- ifelse(preds < 0.5, 0, 1)
+
+# transform predictions into actual labels 
+preds_outcome <- factor(preds_outcome,
+  levels = c("no diabetes", "diabetes"),
+  labels = c("no diabetes", "diabetes")
+)
+
+# compare observed vs. predicted outcome
+tab <- table(test_data$Diabetes_binary, preds_outcome,
+  dnn = c("observed", "predicted")
+)
+
+# print results
+tab
+```
+
+```{r}
+# Source: pROC package
+plot(log_roc, col = "#1D9E75", lwd = 4, main = "ROC Curves: Model Comparison")
+plot(lasso_roc, col = "#E24B4A", lwd = 3, add = TRUE)
+plot(rf_roc, col = "#EF9F27", lwd = 3, add = TRUE)
+legend("bottomright", 
+       legend = c("Logistic Regression", "Lasso", "Random Forest"),
+       col = c("#1D9E75", "#E24B4A", "#EF9F27"), 
+       lwd = 6)
+
+```
+
+```{r}
+# Source: course materials
+library(gtsummary)
+log_glm <- extract_fit_engine(log_model)
+tbl_regression(log_glm, exponentiate = TRUE)
+
+```
+
+```{r}
+# Model comparison table
+library(gt)
+
+tibble(
+  Model = c("Logistic Regression", "Lasso", "Random Forest"),
+  AUC = round(c(as.numeric(auc(log_roc)), 
+                as.numeric(auc(lasso_roc)), 
+                as.numeric(auc(rf_roc))), 3),
+  Accuracy = round(c(log_acc, lasso_acc, rf_acc), 3)
+) |> gt()
+```

@@ -10,7 +10,6 @@
 
 
 
-<meta name="date" content="2026-05-11" />
 
 <title>Methods</title>
 
@@ -30,6 +29,9 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
@@ -220,6 +222,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -227,6 +292,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -274,22 +349,52 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Methods</h1>
-<h4 class="date">2026-05-11</h4>
 
 </div>
 
 
-<div id="r-markdown" class="section level2">
-<h2>R Markdown</h2>
-<pre class="r"><code># Libraries needed
+<div id="introduction" class="section level1">
+<h1>Introduction:</h1>
+<p>To predict diabetes risk, we used three models: logistic regression,
+logistic regression with lasso regularization, and random forests.
+Importantly, our prediction task is a binary classification problem with
+no diabetes = 0 and diabetes or prediabetes = 1. Since the CDC prepared
+the data by collapsing prediabetes and diabetes into one category, we
+ran our analysis accordingly using two classifiers.</p>
+<p>Logistic regression serves as our baseline model since it predicts
+binary outcomes while providing highly interpretable results. To select
+for the most predictive features, we also included a lasso penalty term
+that drove noisy coefficients to zero. We chose L1 regularization over
+L2 to identify the most predictive features for our quiz in the last tab
+of this website. Lastly, as a robustness check, we included a random
+forest model to compare the predictive accuracy of our model across
+different methods.</p>
+<p>First, we imported all necessary libraries for our analysis.</p>
+<pre class="r"><code># Import all libraries
 library(tidymodels)
 library(pROC)
 library(dplyr)
 
 # Import the dataset
-data &lt;- read.csv(&quot;/Users/brigettemahoney/Desktop/diabetes_binary_5050split_health_indicators_BRFSS2015.csv&quot;)
-
-# make the target variable (diabetes) binary 
+data &lt;- read.csv(&quot;/Users/brigettemahoney/Desktop/diabetes_binary_5050split_health_indicators_BRFSS2015.csv&quot;)</code></pre>
+<p>As discussed in the data preparation section, we checked for null and
+missing values. Since this is a government-issued dataset, all entries
+were already cleaned and prepared. Additionally, since the dataset
+contains a perfect 50/50 split for both diabetes/pre-diabetes and no
+diabetes, no data sampling or representative bias precautions were
+needed.</p>
+</div>
+<div id="logistic-regression" class="section level1">
+<h1>Logistic Regression:</h1>
+<p>Since this is a supervised learning task, we first defined
+“diabetes_binary” as our target variable. We split the data into an
+80/20 train test split, since this partition is popular and standard for
+most predictive tasks. Then, we trained a logistic regression model that
+estimates the probability that a given individual has diabetes based on
+a linear combination of the 21 features. Unlike linear regression,
+logistic regression restricts outputs between 0-1, which makes the
+interpretation of probabilistic risk much more intuitive.</p>
+<pre class="r"><code># make the target variable (diabetes) binary 
 data$Diabetes_binary &lt;- as.factor(data$Diabetes_binary)
 
 # Split data into 80/20 train/split
@@ -339,35 +444,123 @@ tidy(log_model) %&gt;% filter(p.value &lt; 0.05) %&gt;% arrange(desc(abs(estimat
 ## 15 Education            -0.0263    0.0114      -2.30 2.16e-  2
 ## 16 PhysHlth             -0.00895   0.00133     -6.73 1.64e- 11
 ## 17 MentHlth             -0.00412   0.00143     -2.88 4.03e-  3</code></pre>
-<pre class="r"><code># ROC plot
-plot(roc_curve)</code></pre>
-<p><img src="Methods_files/figure-html/unnamed-chunk-1-1.png" alt="" width="672" /></p>
+<pre class="r"><code># Save the model for quiz later
+saveRDS(log_model, &quot;log_model.rds&quot;)</code></pre>
+<p>As will be discussed in more detail in the results section, our
+logistic regression model produced an Accuracy of 0.743 and an AUC of
+0.824. This means that our model correctly classified 74.3% of all
+patients in the test set. Additionally, for any randomly chosen person
+with diabetes, our model classified them as higher risk than a randomly
+chosen person without diabetes 82.4% of the time. 16 out of 21 features
+were statistically significant (p&lt;0.05), and a more in-depth analysis
+is detailed in the resutls section.</p>
 </div>
-<div id="lasso-regression" class="section level2">
-<h2>Lasso Regression</h2>
-<p>You can also embed plots, for example:</p>
-<pre class="r"><code># Run Lasso Regularization
-
-lasso_model &lt;- logistic_reg(penalty = 0.1, mixture = 1) %&gt;%
+<div id="lasso-regression" class="section level1">
+<h1>Lasso Regression</h1>
+<p>Since 16/21 features were statistically significant, we wanted to
+explore a more robust model that reported only the most predictive
+features. To do so, we introduced a regularization penalty term to drive
+most of the coefficients to zero. Since logistic regression is a
+minimizing objective, introducing a penalty term selects only the most
+important features. As shown below, we chose a penalty of 0.03 since it
+produced 9 total coefficients. We believe 9 predictive features is an
+optimal number for our interactive quiz, in that it is substantive
+without being overly-complex. As a result, the 9 most predictive
+features are: HighBP, GenHlth, HighChol, Age, BMI, HeartDiseaseorAttack,
+CholCheck, Income, HvyAlcoholConsump</p>
+<pre class="r"><code># Run Lasso Regularization 
+lasso_model &lt;- logistic_reg(penalty = 0.03, mixture = 1) %&gt;%
   set_engine(&quot;glmnet&quot;) %&gt;%
   fit(Diabetes_binary ~ ., data = train_data)
 
 tidy(lasso_model) %&gt;%
   filter(estimate != 0) %&gt;%
   arrange(desc(abs(estimate)))</code></pre>
-<pre><code>## # A tibble: 6 × 3
-##   term        estimate penalty
-##   &lt;chr&gt;          &lt;dbl&gt;   &lt;dbl&gt;
-## 1 (Intercept) -1.44        0.1
-## 2 HighBP       0.494       0.1
-## 3 GenHlth      0.302       0.1
-## 4 HighChol     0.0278      0.1
-## 5 Age          0.00927     0.1
-## 6 BMI          0.00705     0.1</code></pre>
+<pre><code>## # A tibble: 10 × 3
+##    term                 estimate penalty
+##    &lt;chr&gt;                   &lt;dbl&gt;   &lt;dbl&gt;
+##  1 (Intercept)          -4.32       0.03
+##  2 HighBP                0.669      0.03
+##  3 GenHlth               0.483      0.03
+##  4 HighChol              0.381      0.03
+##  5 Age                   0.105      0.03
+##  6 BMI                   0.0489     0.03
+##  7 HeartDiseaseorAttack  0.0470     0.03
+##  8 CholCheck             0.0352     0.03
+##  9 Income               -0.00819    0.03
+## 10 HvyAlcoholConsump    -0.00447    0.03</code></pre>
+</div>
+<div id="random-forest-model" class="section level1">
+<h1>Random Forest Model</h1>
+<p>As a robustness check, we ran a random forest model. Random forests
+create a sequence of decision trees that can capture non-linear
+relationships between features and outcomes. As shown in the code below,
+we fit the random forest model using 1,000 trees and evaluated their
+performance using 10-fold cross validation. Importantly, we used the 9
+selected features from the lasso model to fit the model. As a result,
+the model produced the same AUC as logistic regression (0.824) which
+therefore validates our results.</p>
+<pre class="r"><code># create a random forest model
+rf_model &lt;- 
+  rand_forest(trees = 1000) %&gt;% 
+  set_engine(&quot;ranger&quot;) %&gt;% 
+  set_mode(&quot;classification&quot;)
+
+# define the random forest workflow
+rf_wflow &lt;- 
+  workflow() %&gt;% 
+  add_formula(
+    Diabetes_binary ~ HighBP + GenHlth + HighChol + Age + BMI +
+      HeartDiseaseorAttack + CholCheck + Income + HvyAlcoholConsump) %&gt;% 
+  add_model(rf_model)
+
+# fit the random forest model
+rf_fit &lt;- rf_wflow %&gt;% fit(data = train_data)
+
+# set up cross validation
+diabetes_folds &lt;- vfold_cv(train_data, v = 5)
+
+keep_pred &lt;- control_resamples(save_pred = TRUE, save_workflow = TRUE)
+
+# create a resample object
+rf_res &lt;- 
+  rf_wflow %&gt;% 
+  fit_resamples(resamples = diabetes_folds, control = keep_pred)
+
+# examine the metrics across folds
+collect_metrics(rf_res)</code></pre>
+<pre><code>## # A tibble: 3 × 6
+##   .metric     .estimator  mean     n  std_err .config        
+##   &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
+## 1 accuracy    binary     0.747     5 0.00106  pre0_mod0_post0
+## 2 brier_class binary     0.171     5 0.000482 pre0_mod0_post0
+## 3 roc_auc     binary     0.823     5 0.000862 pre0_mod0_post0</code></pre>
+<pre class="r"><code># final rf model on test set
+final_rf_res &lt;- last_fit(rf_wflow, splits)
+
+# get final metrics
+collect_metrics(final_rf_res)</code></pre>
+<pre><code>## # A tibble: 3 × 4
+##   .metric     .estimator .estimate .config        
+##   &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          
+## 1 accuracy    binary         0.745 pre0_mod0_post0
+## 2 roc_auc     binary         0.824 pre0_mod0_post0
+## 3 brier_class binary         0.170 pre0_mod0_post0</code></pre>
+<pre class="r"><code># AUC
+rf_probs &lt;- predict(rf_fit, new_data = test_data, type = &quot;prob&quot;)
+rf_roc &lt;- roc(test_data$Diabetes_binary, rf_probs$.pred_1)</code></pre>
+<pre><code>## Setting levels: control = 0, case = 1</code></pre>
+<pre><code>## Setting direction: controls &lt; cases</code></pre>
+<pre class="r"><code>print(paste(&quot;Random Forest AUC:&quot;, round(auc(rf_roc), 3)))</code></pre>
+<pre><code>## [1] &quot;Random Forest AUC: 0.824&quot;</code></pre>
+<pre class="r"><code># save model
+saveRDS(rf_fit, &quot;rf_model.rds&quot;)</code></pre>
 </div>
 
 
 
+</div>
+</div>
 
 </div>
 
@@ -400,6 +593,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
