@@ -66,8 +66,53 @@ tidy(lasso_model) %>%
   arrange(desc(abs(estimate)))
 
 ```
-
+## Random Forest Model
 
 ```{r}
+
+# create a random forest model
+rf_model <- 
+  rand_forest(trees = 1000) %>% 
+  set_engine("ranger") %>% 
+  set_mode("classification")
+
+# define the random forest workflow
+rf_wflow <- 
+  workflow() %>% 
+  add_formula(
+    Diabetes_binary ~ HighBP + HighChol + BMI + Smoker + 
+      Stroke + HeartDiseaseorAttack + PhysActivity + 
+      GenHlth + Age + Income) %>% 
+  add_model(rf_model)
+
+# fit the random forest model
+rf_fit <- rf_wflow %>% fit(data = train_data)
+
+# set up cross validation
+diabetes_folds <- vfold_cv(train_data, v = 10)
+
+keep_pred <- control_resamples(save_pred = TRUE, save_workflow = TRUE)
+
+# create a resample object
+rf_res <- 
+  rf_wflow %>% 
+  fit_resamples(resamples = diabetes_folds, control = keep_pred)
+
+# examine the metrics across folds
+collect_metrics(rf_res)
+
+# final rf model on test set
+final_rf_res <- last_fit(rf_wflow, splits)
+
+# get final metrics
+collect_metrics(final_rf_res)
+
+# compute AUC for comparison with logistic regression
+rf_probs <- predict(rf_fit, new_data = test_data, type = "prob")
+rf_roc <- roc(test_data$Diabetes_binary, rf_probs$.pred_1)
+print(paste("Random Forest AUC:", round(auc(rf_roc), 3)))
+
+# save model
+saveRDS(rf_fit, "rf_model.rds")
 
 ```
