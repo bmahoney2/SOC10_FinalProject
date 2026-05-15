@@ -29,7 +29,7 @@ As discussed in the data preparation section, we checked for null and missing va
 Since this is a supervised learning task, we first defined "diabetes_binary" as our target variable. We split the data into an 80/20 train test split, since this partition is popular and standard for most predictive tasks. Then, we trained a logistic regression model that estimates the probability that a given individual has diabetes based on a linear combination of the 21 features. Unlike linear regression, logistic regression restricts outputs between 0-1, which makes the interpretation of probabilistic risk much more intuitive. 
 
 ```{r}
-
+# Source: Course Website (adapted code from linear regression)
 # make the target variable (diabetes) binary 
 data$Diabetes_binary <- as.factor(data$Diabetes_binary)
 
@@ -80,15 +80,24 @@ tidy(lasso_model) %>%
   filter(estimate != 0) %>%
   arrange(desc(abs(estimate)))
 
+saveRDS(lasso_model, "lasso_model.rds")
+
+lasso_probs_roc <- roc(test_data$Diabetes_binary, predict(lasso_model, new_data = test_data, type = "prob")$.pred_1)
+saveRDS(lasso_probs_roc, "lasso_roc.rds")
+
+lasso_acc <- mean(predict(lasso_model, test_data)$.pred_class == test_data$Diabetes_binary)
+saveRDS(lasso_acc, "lasso_acc.rds")
+
+
 ```
 # Random Forest Model
 As a robustness check, we ran a random forest model. Random forests create a sequence of decision trees that can capture non-linear relationships between features and outcomes. As shown in the code below, we fit the random forest model using 1,000 trees and evaluated their performance using 10-fold cross validation. Importantly, we used the 9 selected features from the lasso model to fit the model. As a result, the model produced the same AUC as logistic regression (0.824) which therefore validates our results. 
 
 ```{r}
-
+# Source: Course Website
 # create a random forest model
 rf_model <- 
-  rand_forest(trees = 1000) %>% 
+  rand_forest(trees = 500) %>% 
   set_engine("ranger") %>% 
   set_mode("classification")
 
@@ -129,5 +138,21 @@ print(paste("Random Forest AUC:", round(auc(rf_roc), 3)))
 
 # save model
 saveRDS(rf_fit, "rf_model.rds")
+
+# save accuracy values
+rf_acc <- mean(predict(rf_fit, test_data)$.pred_class == test_data$Diabetes_binary)
+
+```
+
+
+```{r}
+# save all model metrics
+saveRDS(probs, "log_probs.rds")
+saveRDS(predict(lasso_model, new_data = test_data, type = "prob"), "lasso_probs.rds")
+saveRDS(rf_probs, "rf_probs.rds")
+saveRDS(roc_curve, "log_roc.rds")
+saveRDS(rf_roc, "rf_roc.rds")
+saveRDS(accuracy, "log_acc.rds")
+saveRDS(rf_acc, "rf_acc.rds")
 
 ```
