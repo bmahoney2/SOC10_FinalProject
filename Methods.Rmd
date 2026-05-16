@@ -89,6 +89,8 @@ lasso_acc <- mean(predict(lasso_model, test_data)$.pred_class == test_data$Diabe
 saveRDS(lasso_acc, "lasso_acc.rds")
 
 
+
+
 ```
 # Random Forest Model
 As a robustness check, we ran a random forest model. Random forests create a sequence of decision trees that can capture non-linear relationships between features and outcomes. As shown in the code below, we fit the random forest model using 1,000 trees and evaluated their performance using 10-fold cross validation. Importantly, we used the 9 selected features from the lasso model to fit the model. As a result, the model produced the same AUC as logistic regression (0.824) which therefore validates our results. 
