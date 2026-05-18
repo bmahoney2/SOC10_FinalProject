@@ -80,7 +80,9 @@ conf_mat(
   data = test_data %>% bind_cols(log_preds),
   truth = Diabetes_binary,
   estimate = .pred_class
-)
+) %>%
+  autoplot(type = "heatmap") +
+  labs(x = "Predicted", y = "Actual")
 
 ```
 # ROC Curves
