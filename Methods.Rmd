@@ -7,12 +7,12 @@ output:
     toc_float: true
 ---
 # Introduction:
-To predict diabetes risk, we used three models: logistic regression, logistic regression with lasso regularization, and random forests. Importantly, our prediction task is a binary classification problem with no diabetes = 0 and diabetes or prediabetes = 1. Since the CDC prepared the data by collapsing prediabetes and diabetes into one category, we ran our analysis accordingly using two classifiers. 
+To predict diabetes risk, we used three models: logistic regression, logistic regression with lasso regularization, and random forests. Importantly, our prediction task is a binary classification problem with no diabetes = 0 and diabetes/pre-diabetes = 1. Since the CDC prepared the data by collapsing pre-diabetes and diabetes into one category, we ran our analysis accordingly using two classifiers. 
 
-Logistic regression serves as our baseline model since it predicts binary outcomes while providing highly interpretable results. To select for the most predictive features, we also included a lasso penalty term that drove noisy coefficients to zero. We chose L1 regularization over L2 to identify the most predictive features for our quiz in the last tab of this website. Lastly, as a robustness check, we included a random forest model to compare the predictive accuracy of our model across different methods.
+Logistic regression serves as our baseline model since it predicts binary outcomes while providing highly interpretable results. To select for the most predictive features, we also included a lasso penalty term that selected for only the most predictive features (drove noisy coefficients to zero). We chose L1 (lasso) regularization over L2 (ridge) regularization to identify only the most predictive features in our model. Since L1 enacts a sum of absolute value penalty, whereas L2 enacts a sum of squares penalty term, most coefficients get minimized to zero, thus allowing for only the most predictive features to estimate model output. This decision to use a Lasso model also made the quiz section of this project easier to build and interpret. Lastly, as a robustness check, we included a random forest model to compare the predictive accuracy of our model across different methods.
 
 First, we imported all necessary libraries for our analysis. 
-```{r}
+```{r, message = FALSE}
 # Import all libraries
 library(tidymodels)
 library(pROC)
@@ -23,12 +23,12 @@ data <- read.csv("/Users/brigettemahoney/Desktop/diabetes_binary_5050split_healt
 
 ```
 
-As discussed in the data preparation section, we checked for null and missing values. Since this is a government-issued dataset, all entries were already cleaned and prepared. Additionally, since the dataset contains a perfect 50/50 split for both diabetes/pre-diabetes and no diabetes, no data sampling or representative bias precautions were needed. 
+As discussed in the data preparation section, we checked for null and missing values. Since this is a government-issued dataset, all entries were already cleaned and prepared for analysis. Additionally, since the dataset contains a perfect 50/50 split between patients with and without diabetes, we did not need to do any data resampling to enforce representative between classes. 
 
 # Logistic Regression:
 Since this is a supervised learning task, we first defined "diabetes_binary" as our target variable. We split the data into an 80/20 train test split, since this partition is popular and standard for most predictive tasks. Then, we trained a logistic regression model that estimates the probability that a given individual has diabetes based on a linear combination of the 21 features. Unlike linear regression, logistic regression restricts outputs between 0-1, which makes the interpretation of probabilistic risk much more intuitive. 
 
-```{r}
+```{r, message = FALSE}
 # Source: Course Website (adapted code from linear regression)
 # make the target variable (diabetes) binary 
 data$Diabetes_binary <- as.factor(data$Diabetes_binary)
@@ -64,38 +64,40 @@ saveRDS(log_model, "log_model.rds")
 
 ```
 
-As will be discussed in more detail in the results section, our logistic regression model produced an Accuracy of 0.743 and an AUC of 0.824. This means that our model correctly classified 74.3% of all patients in the test set. Additionally, for any randomly chosen person with diabetes, our model classified them as higher risk than a randomly chosen person without diabetes 82.4% of the time. 16 out of 21 features were statistically significant (p<0.05), and a more in-depth analysis is detailed in the resutls section. 
+As will be discussed in more detail in the results section, our logistic regression model produced an Accuracy of 0.743 and an AUC of 0.824. This means that our model correctly classified 74.3% of all patients in the test set. Additionally, for any randomly chosen person with diabetes, our model classified them as higher risk than a randomly chosen person without diabetes 82.4% of the time. 16 out of 21 features were statistically significant (p<0.05), and a more in-depth analysis is detailed in the results section. 
 
 # Lasso Regression
-Since 16/21 features were statistically significant, we wanted to explore a more robust model that reported only the most predictive features. To do so, we introduced a regularization penalty term to drive most of the coefficients to zero. Since logistic regression is a minimizing objective, introducing a penalty term selects only the most important features. As shown below, we chose a penalty of 0.03 since it produced 9 total coefficients. We believe 9 predictive features is an optimal number for our interactive quiz, in that it is substantive without being overly-complex. As a result, the 9 most predictive features are: HighBP, GenHlth, HighChol, Age, BMI, HeartDiseaseorAttack, CholCheck, Income, HvyAlcoholConsump
+Since 16/21 features were statistically significant, we wanted to explore if we could achieve similar results using only the most important  features. To do so, we introduced a regularization penalty term to drive most of the coefficients to zero. Since logistic regression is a minimizing objective, introducing a penalty term selects only the most important features. As shown below, we chose a penalty of 0.03 since it produced 9 total coefficients. We believe 9 predictive features is an optimal number to base our interactive quiz off of, since it provides a substantial number of features without being exhaustive. As a result, the 9 most predictive features are: HighBP, GenHlth, HighChol, Age, BMI, HeartDiseaseorAttack, CholCheck, Income, HvyAlcoholConsump.
 
-```{r}
+```{r, message = FALSE}
 
 # Run Lasso Regularization 
 lasso_model <- logistic_reg(penalty = 0.03, mixture = 1) %>%
   set_engine("glmnet") %>%
   fit(Diabetes_binary ~ ., data = train_data)
 
+# run the lasso model
 tidy(lasso_model) %>%
+# only keep non-zero coefficients
   filter(estimate != 0) %>%
   arrange(desc(abs(estimate)))
 
+# save the model 
 saveRDS(lasso_model, "lasso_model.rds")
 
+# Get all ROC metrics
 lasso_probs_roc <- roc(test_data$Diabetes_binary, predict(lasso_model, new_data = test_data, type = "prob")$.pred_1)
 saveRDS(lasso_probs_roc, "lasso_roc.rds")
 
+# compute and save accuracy metrics
 lasso_acc <- mean(predict(lasso_model, test_data)$.pred_class == test_data$Diabetes_binary)
 saveRDS(lasso_acc, "lasso_acc.rds")
 
-
-
-
 ```
 # Random Forest Model
-As a robustness check, we ran a random forest model. Random forests create a sequence of decision trees that can capture non-linear relationships between features and outcomes. As shown in the code below, we fit the random forest model using 1,000 trees and evaluated their performance using 10-fold cross validation. Importantly, we used the 9 selected features from the lasso model to fit the model. As a result, the model produced the same AUC as logistic regression (0.824) which therefore validates our results. 
+As a robustness check, we created a random forest model. Random forests create a sequence of decision trees that can capture non-linear relationships between features and outcomes. As shown in the code below, we fit the random forest model using 500 trees and evaluated their performance using 5-fold cross validation. We chose these model parameters to optimize for the model accuracy / running time tradeoff. Importantly, we used the 9 selected features from the lasso model to fit the model. As a result, the model produced the same AUC as logistic regression (0.824), which therefore validates our results. 
 
-```{r}
+```{r, message = FALSE}
 # Source: Course Website
 # create a random forest model
 rf_model <- 
@@ -147,7 +149,7 @@ rf_acc <- mean(predict(rf_fit, test_data)$.pred_class == test_data$Diabetes_bina
 ```
 
 
-```{r}
+```{r, message = FALSE}
 # save all model metrics
 saveRDS(probs, "log_probs.rds")
 saveRDS(predict(lasso_model, new_data = test_data, type = "prob"), "lasso_probs.rds")

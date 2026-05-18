@@ -356,13 +356,33 @@ div.tocify {
 <p>First, we call back all of the model results from the methods
 section. More specifically, this includes each model’s predicted
 probabilities, as well as their error rates.</p>
-<pre class="r"><code>library(tidymodels)
-library(pROC)
-library(dplyr)
+<pre class="r"><code># Import all libraries
+library(tidymodels)</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────── tidymodels 1.5.0 ──</code></pre>
+<pre><code>## ✔ broom        1.0.12     ✔ recipes      1.3.2 
+## ✔ dials        1.4.3      ✔ rsample      1.3.2 
+## ✔ dplyr        1.2.1      ✔ tailor       0.1.0 
+## ✔ ggplot2      4.0.3      ✔ tidyr        1.3.2 
+## ✔ infer        1.1.0      ✔ tune         2.1.0 
+## ✔ modeldata    1.5.1      ✔ workflows    1.3.0 
+## ✔ parsnip      1.5.0      ✔ workflowsets 1.1.1 
+## ✔ purrr        1.2.2      ✔ yardstick    1.4.0</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## ✖ purrr::discard() masks scales::discard()
+## ✖ dplyr::filter()  masks stats::filter()
+## ✖ dplyr::lag()     masks stats::lag()
+## ✖ recipes::step()  masks stats::step()</code></pre>
+<pre class="r"><code>library(pROC)</code></pre>
+<pre><code>## Type &#39;citation(&quot;pROC&quot;)&#39; for a citation.</code></pre>
+<pre><code>## 
+## Attaching package: &#39;pROC&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     cov, smooth, var</code></pre>
+<pre class="r"><code>library(dplyr)
 
-# call back the saved probabilities and ROCs for each model
-
-# load data for logistic regression model
+# Call back the saved probabilities and ROCs for each model
+# Load data for logistic regression model
 log_model &lt;- readRDS(&quot;log_model.rds&quot;)
 log_probs &lt;- readRDS(&quot;log_probs.rds&quot;)
 
@@ -388,19 +408,19 @@ lasso_acc &lt;- readRDS(&quot;lasso_acc.rds&quot;)</code></pre>
 <p>The table below reports the AUC and accuracy values for logistic,
 lasso logistic, and random forest classification models. The similarity
 of results across all models suggests that diabetes prediction is
-promising. An AUC above 0.80 means that the model has over an 80%
-probability of assigning a higher predicted risk to a random individual
-with diabetes than to a random individual without diabetes. Given that
-random prediction would yield an AUC of 0.50, all models perform much
-better than random guessing. Despite this, an accuracy of around 75%
-might not meet medical standards given the gravity of making decisions
-that can alter a patient’s life. However, given that the dataset had a
-50/50 split of diagnoses, achieving an accuracy of 75% is nevertheless
-impressive. For example, if only 5% of people in the dataset had
-diabetes, the model could achieve 95% accuracy by simply classifying
-everyone as not having diabetes. Since each class was balanced, an
-accuracy of 75% highlights a strong relationship between the health
-variables in the dataset and having diabetes.</p>
+promising and feasible. An AUC above 0.80 means that the model has over
+an 80% probability of assigning a higher predicted risk to a random
+individual with diabetes than to a random individual without diabetes.
+Given that random prediction would yield an AUC of 0.50, all models
+perform much better than random guessing. Despite this, an accuracy of
+around 75% might not meet medical standards given the gravity of making
+decisions that can alter a patient’s life. However, given that the
+dataset had a 50/50 split of diagnoses, achieving an accuracy of 75% is
+nevertheless impressive. For example, if only 5% of people in the
+dataset had diabetes, the model could achieve 95% accuracy by simply
+classifying everyone as not having diabetes. Since each class was
+balanced, an accuracy of 75% highlights a strong relationship between
+the health variables in the dataset and having diabetes.</p>
 <pre class="r"><code># Source: https://gt.rstudio.com/articles/gt.html 
 # Make a model comparison table
 library(gt)
@@ -413,23 +433,23 @@ tibble(
                 as.numeric(auc(rf_roc))), 3),
   Accuracy = round(c(log_acc, lasso_acc, rf_acc), 3)
 ) |&gt; gt()</code></pre>
-<div id="wfnfhervru" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#wfnfhervru table {
+<div id="dwbedjxcdt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#dwbedjxcdt table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#wfnfhervru thead, #wfnfhervru tbody, #wfnfhervru tfoot, #wfnfhervru tr, #wfnfhervru td, #wfnfhervru th {
+#dwbedjxcdt thead, #dwbedjxcdt tbody, #dwbedjxcdt tfoot, #dwbedjxcdt tr, #dwbedjxcdt td, #dwbedjxcdt th {
   border-style: none;
 }
 
-#wfnfhervru p {
+#dwbedjxcdt p {
   margin: 0;
   padding: 0;
 }
 
-#wfnfhervru .gt_table {
+#dwbedjxcdt .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -455,12 +475,12 @@ tibble(
   border-left-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_caption {
+#dwbedjxcdt .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wfnfhervru .gt_title {
+#dwbedjxcdt .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -472,7 +492,7 @@ tibble(
   border-bottom-width: 0;
 }
 
-#wfnfhervru .gt_subtitle {
+#dwbedjxcdt .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -484,7 +504,7 @@ tibble(
   border-top-width: 0;
 }
 
-#wfnfhervru .gt_heading {
+#dwbedjxcdt .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -496,13 +516,13 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_bottom_border {
+#dwbedjxcdt .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_col_headings {
+#dwbedjxcdt .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -517,7 +537,7 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_col_heading {
+#dwbedjxcdt .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -537,7 +557,7 @@ tibble(
   overflow-x: hidden;
 }
 
-#wfnfhervru .gt_column_spanner_outer {
+#dwbedjxcdt .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -549,15 +569,15 @@ tibble(
   padding-right: 4px;
 }
 
-#wfnfhervru .gt_column_spanner_outer:first-child {
+#dwbedjxcdt .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wfnfhervru .gt_column_spanner_outer:last-child {
+#dwbedjxcdt .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wfnfhervru .gt_column_spanner {
+#dwbedjxcdt .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -569,11 +589,11 @@ tibble(
   width: 100%;
 }
 
-#wfnfhervru .gt_spanner_row {
+#dwbedjxcdt .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#wfnfhervru .gt_group_heading {
+#dwbedjxcdt .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -599,7 +619,7 @@ tibble(
   text-align: left;
 }
 
-#wfnfhervru .gt_empty_group_heading {
+#dwbedjxcdt .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -614,15 +634,15 @@ tibble(
   vertical-align: middle;
 }
 
-#wfnfhervru .gt_from_md > :first-child {
+#dwbedjxcdt .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wfnfhervru .gt_from_md > :last-child {
+#dwbedjxcdt .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wfnfhervru .gt_row {
+#dwbedjxcdt .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -641,7 +661,7 @@ tibble(
   overflow-x: hidden;
 }
 
-#wfnfhervru .gt_stub {
+#dwbedjxcdt .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -654,7 +674,7 @@ tibble(
   padding-right: 5px;
 }
 
-#wfnfhervru .gt_stub_row_group {
+#dwbedjxcdt .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -668,15 +688,15 @@ tibble(
   vertical-align: top;
 }
 
-#wfnfhervru .gt_row_group_first td {
+#dwbedjxcdt .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wfnfhervru .gt_row_group_first th {
+#dwbedjxcdt .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#wfnfhervru .gt_summary_row {
+#dwbedjxcdt .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -686,16 +706,16 @@ tibble(
   padding-right: 5px;
 }
 
-#wfnfhervru .gt_first_summary_row {
+#dwbedjxcdt .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_first_summary_row.thick {
+#dwbedjxcdt .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wfnfhervru .gt_last_summary_row {
+#dwbedjxcdt .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -705,7 +725,7 @@ tibble(
   border-bottom-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_grand_summary_row {
+#dwbedjxcdt .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -715,7 +735,7 @@ tibble(
   padding-right: 5px;
 }
 
-#wfnfhervru .gt_first_grand_summary_row {
+#dwbedjxcdt .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -725,7 +745,7 @@ tibble(
   border-top-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_last_grand_summary_row_top {
+#dwbedjxcdt .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -735,11 +755,11 @@ tibble(
   border-bottom-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_striped {
+#dwbedjxcdt .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wfnfhervru .gt_table_body {
+#dwbedjxcdt .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -748,7 +768,7 @@ tibble(
   border-bottom-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_footnotes {
+#dwbedjxcdt .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -762,7 +782,7 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_footnote {
+#dwbedjxcdt .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -771,7 +791,7 @@ tibble(
   padding-right: 5px;
 }
 
-#wfnfhervru .gt_sourcenotes {
+#dwbedjxcdt .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -785,7 +805,7 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#wfnfhervru .gt_sourcenote {
+#dwbedjxcdt .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -793,72 +813,72 @@ tibble(
   padding-right: 5px;
 }
 
-#wfnfhervru .gt_left {
+#dwbedjxcdt .gt_left {
   text-align: left;
 }
 
-#wfnfhervru .gt_center {
+#dwbedjxcdt .gt_center {
   text-align: center;
 }
 
-#wfnfhervru .gt_right {
+#dwbedjxcdt .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wfnfhervru .gt_font_normal {
+#dwbedjxcdt .gt_font_normal {
   font-weight: normal;
 }
 
-#wfnfhervru .gt_font_bold {
+#dwbedjxcdt .gt_font_bold {
   font-weight: bold;
 }
 
-#wfnfhervru .gt_font_italic {
+#dwbedjxcdt .gt_font_italic {
   font-style: italic;
 }
 
-#wfnfhervru .gt_super {
+#dwbedjxcdt .gt_super {
   font-size: 65%;
 }
 
-#wfnfhervru .gt_footnote_marks {
+#dwbedjxcdt .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#wfnfhervru .gt_asterisk {
+#dwbedjxcdt .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wfnfhervru .gt_indent_1 {
+#dwbedjxcdt .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wfnfhervru .gt_indent_2 {
+#dwbedjxcdt .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wfnfhervru .gt_indent_3 {
+#dwbedjxcdt .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wfnfhervru .gt_indent_4 {
+#dwbedjxcdt .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wfnfhervru .gt_indent_5 {
+#dwbedjxcdt .gt_indent_5 {
   text-indent: 25px;
 }
 
-#wfnfhervru .katex-display {
+#dwbedjxcdt .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#wfnfhervru div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#dwbedjxcdt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -873,13 +893,13 @@ tibble(
   <tbody class="gt_table_body">
     <tr><td headers="Model" class="gt_row gt_left">Logistic Regression</td>
 <td headers="AUC" class="gt_row gt_right">0.824</td>
-<td headers="Accuracy" class="gt_row gt_right">0.748</td></tr>
+<td headers="Accuracy" class="gt_row gt_right">0.743</td></tr>
     <tr><td headers="Model" class="gt_row gt_left">Lasso</td>
 <td headers="AUC" class="gt_row gt_right">0.817</td>
-<td headers="Accuracy" class="gt_row gt_right">0.741</td></tr>
+<td headers="Accuracy" class="gt_row gt_right">0.740</td></tr>
     <tr><td headers="Model" class="gt_row gt_left">Random Forest</td>
-<td headers="AUC" class="gt_row gt_right">0.821</td>
-<td headers="Accuracy" class="gt_row gt_right">0.746</td></tr>
+<td headers="AUC" class="gt_row gt_right">0.824</td>
+<td headers="Accuracy" class="gt_row gt_right">0.745</td></tr>
   </tbody>
   
 </table>
@@ -925,8 +945,8 @@ conf_mat(
 )</code></pre>
 <pre><code>##           Truth
 ## Prediction    0    1
-##          0 5169 1664
-##          1 1901 5406</code></pre>
+##          0 5157 1714
+##          1 1913 5356</code></pre>
 </div>
 <div id="roc-curves" class="section level1">
 <h1>ROC Curves</h1>
@@ -942,9 +962,9 @@ results are robust across models.</p>
 <pre class="r"><code># Source: https://rpubs.com/zachbanasik/1302729
 
 # plot all curves on one graph
-plot(log_roc, col = &quot;green&quot;, lwd = 2, main = &quot;ROC Curves Comparison&quot;)
-plot(lasso_roc, col = &quot;red&quot;, lwd = 2, add = TRUE)
-plot(rf_roc, col = &quot;blue&quot;, lwd = 2, add = TRUE)
+plot(log_roc, col = &quot;green&quot;, lwd = 1, main = &quot;ROC Curves Comparison&quot;)
+plot(lasso_roc, col = &quot;red&quot;, lwd = 1, add = TRUE)
+plot(rf_roc, col = &quot;blue&quot;, lwd = 1, add = TRUE)
 legend(&quot;bottomright&quot;, 
        legend = c(&quot;Logistic Regression&quot;, &quot;Lasso&quot;, &quot;Random Forest&quot;),
        col = c(&quot;green&quot;, &quot;red&quot;, &quot;blue&quot;),
@@ -954,22 +974,24 @@ legend(&quot;bottomright&quot;,
 95% confidence interval, and p-value for each coefficient in the
 logistic regression. Since logistic regression computes the log odds of
 having diabetes, the “exponentiate = TRUE” function converts log odds to
-an odds ratio, which allows for greater interpretability.</p>
+an odds ratio (using the Sigmoid function), which allows for greater
+interpretability.</p>
 <p>High blood pressure (HighBP), high cholesterol (HighChol), and worse
 general health (GenHlth) were associated with 2.08x, 1.78x, and 1.8x
 greater odds of diabetes, respectively. Furthermore, the model suggests
 that having cholesterol checked increases the odds of developing
 diabetes by 3.87x. However, this is most likely due to detection bias:
-unhealthy people are more likely to get their cholesterol checked.</p>
+unhealthy people are more likely to need a reason to get their
+cholesterol checked.</p>
 <p>On the other hand, heavy alcohol consumption (HvyAlcoholConsump),
 higher income, and higher education levels were all associated with
 lower odds of developing diabetes. While the last two make intuitive
-sense, heavy alcohol consumption is not. One interpretation is that
-younger people (college students, etc) are heavier drinkers but are not
+sense, heavy alcohol consumption does not. One interpretation is that
+younger people (college students, etc.) are heavier drinkers but are not
 yet age susceptible to diabetes.</p>
 <p>Lastly, only 5 out of 21 total features did not produce statistically
-significant results at the p=0.05 threshold, indicating that many health
-factors affect diabetes prediction.</p>
+significant results at the p=0.05 threshold, indicating that there are
+many health factors that affect diabetes prediction.</p>
 <pre class="r"><code># Source:https://statsandr.com/blog/binary-logistic-regression-in-r/
 
 # Load package
@@ -978,23 +1000,23 @@ library(gtsummary)
 # print table with odds ratio, p-value, and confidence intervals
 log_glm &lt;- extract_fit_engine(log_model)
 tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
-<div id="zqkgpspggx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#zqkgpspggx table {
+<div id="ulsvasxiui" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ulsvasxiui table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#zqkgpspggx thead, #zqkgpspggx tbody, #zqkgpspggx tfoot, #zqkgpspggx tr, #zqkgpspggx td, #zqkgpspggx th {
+#ulsvasxiui thead, #ulsvasxiui tbody, #ulsvasxiui tfoot, #ulsvasxiui tr, #ulsvasxiui td, #ulsvasxiui th {
   border-style: none;
 }
 
-#zqkgpspggx p {
+#ulsvasxiui p {
   margin: 0;
   padding: 0;
 }
 
-#zqkgpspggx .gt_table {
+#ulsvasxiui .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1020,12 +1042,12 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-left-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_caption {
+#ulsvasxiui .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#zqkgpspggx .gt_title {
+#ulsvasxiui .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1037,7 +1059,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-bottom-width: 0;
 }
 
-#zqkgpspggx .gt_subtitle {
+#ulsvasxiui .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1049,7 +1071,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-top-width: 0;
 }
 
-#zqkgpspggx .gt_heading {
+#ulsvasxiui .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1061,13 +1083,13 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_bottom_border {
+#ulsvasxiui .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_col_headings {
+#ulsvasxiui .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1082,7 +1104,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_col_heading {
+#ulsvasxiui .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1102,7 +1124,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   overflow-x: hidden;
 }
 
-#zqkgpspggx .gt_column_spanner_outer {
+#ulsvasxiui .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1114,15 +1136,15 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   padding-right: 4px;
 }
 
-#zqkgpspggx .gt_column_spanner_outer:first-child {
+#ulsvasxiui .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#zqkgpspggx .gt_column_spanner_outer:last-child {
+#ulsvasxiui .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#zqkgpspggx .gt_column_spanner {
+#ulsvasxiui .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1134,11 +1156,11 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   width: 100%;
 }
 
-#zqkgpspggx .gt_spanner_row {
+#ulsvasxiui .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#zqkgpspggx .gt_group_heading {
+#ulsvasxiui .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1164,7 +1186,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   text-align: left;
 }
 
-#zqkgpspggx .gt_empty_group_heading {
+#ulsvasxiui .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1179,15 +1201,15 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   vertical-align: middle;
 }
 
-#zqkgpspggx .gt_from_md > :first-child {
+#ulsvasxiui .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#zqkgpspggx .gt_from_md > :last-child {
+#ulsvasxiui .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#zqkgpspggx .gt_row {
+#ulsvasxiui .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1206,7 +1228,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   overflow-x: hidden;
 }
 
-#zqkgpspggx .gt_stub {
+#ulsvasxiui .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1219,7 +1241,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   padding-right: 5px;
 }
 
-#zqkgpspggx .gt_stub_row_group {
+#ulsvasxiui .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1233,15 +1255,15 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   vertical-align: top;
 }
 
-#zqkgpspggx .gt_row_group_first td {
+#ulsvasxiui .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#zqkgpspggx .gt_row_group_first th {
+#ulsvasxiui .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#zqkgpspggx .gt_summary_row {
+#ulsvasxiui .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1251,16 +1273,16 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   padding-right: 5px;
 }
 
-#zqkgpspggx .gt_first_summary_row {
+#ulsvasxiui .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_first_summary_row.thick {
+#ulsvasxiui .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#zqkgpspggx .gt_last_summary_row {
+#ulsvasxiui .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1270,7 +1292,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_grand_summary_row {
+#ulsvasxiui .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1280,7 +1302,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   padding-right: 5px;
 }
 
-#zqkgpspggx .gt_first_grand_summary_row {
+#ulsvasxiui .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1290,7 +1312,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-top-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_last_grand_summary_row_top {
+#ulsvasxiui .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1300,11 +1322,11 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_striped {
+#ulsvasxiui .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#zqkgpspggx .gt_table_body {
+#ulsvasxiui .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1313,7 +1335,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_footnotes {
+#ulsvasxiui .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1327,7 +1349,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_footnote {
+#ulsvasxiui .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1336,7 +1358,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   padding-right: 5px;
 }
 
-#zqkgpspggx .gt_sourcenotes {
+#ulsvasxiui .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1350,7 +1372,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   border-right-color: #D3D3D3;
 }
 
-#zqkgpspggx .gt_sourcenote {
+#ulsvasxiui .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1358,72 +1380,72 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   padding-right: 5px;
 }
 
-#zqkgpspggx .gt_left {
+#ulsvasxiui .gt_left {
   text-align: left;
 }
 
-#zqkgpspggx .gt_center {
+#ulsvasxiui .gt_center {
   text-align: center;
 }
 
-#zqkgpspggx .gt_right {
+#ulsvasxiui .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#zqkgpspggx .gt_font_normal {
+#ulsvasxiui .gt_font_normal {
   font-weight: normal;
 }
 
-#zqkgpspggx .gt_font_bold {
+#ulsvasxiui .gt_font_bold {
   font-weight: bold;
 }
 
-#zqkgpspggx .gt_font_italic {
+#ulsvasxiui .gt_font_italic {
   font-style: italic;
 }
 
-#zqkgpspggx .gt_super {
+#ulsvasxiui .gt_super {
   font-size: 65%;
 }
 
-#zqkgpspggx .gt_footnote_marks {
+#ulsvasxiui .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#zqkgpspggx .gt_asterisk {
+#ulsvasxiui .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#zqkgpspggx .gt_indent_1 {
+#ulsvasxiui .gt_indent_1 {
   text-indent: 5px;
 }
 
-#zqkgpspggx .gt_indent_2 {
+#ulsvasxiui .gt_indent_2 {
   text-indent: 10px;
 }
 
-#zqkgpspggx .gt_indent_3 {
+#ulsvasxiui .gt_indent_3 {
   text-indent: 15px;
 }
 
-#zqkgpspggx .gt_indent_4 {
+#ulsvasxiui .gt_indent_4 {
   text-indent: 20px;
 }
 
-#zqkgpspggx .gt_indent_5 {
+#ulsvasxiui .gt_indent_5 {
   text-indent: 25px;
 }
 
-#zqkgpspggx .katex-display {
+#ulsvasxiui .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#zqkgpspggx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#ulsvasxiui div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1438,32 +1460,32 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
   </thead>
   <tbody class="gt_table_body">
     <tr><td headers="label" class="gt_row gt_left">HighBP</td>
-<td headers="estimate" class="gt_row gt_center">2.09</td>
+<td headers="estimate" class="gt_row gt_center">2.08</td>
 <td headers="conf.low" class="gt_row gt_center">2.00, 2.18</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">HighChol</td>
-<td headers="estimate" class="gt_row gt_center">1.81</td>
-<td headers="conf.low" class="gt_row gt_center">1.74, 1.89</td>
+<td headers="estimate" class="gt_row gt_center">1.78</td>
+<td headers="conf.low" class="gt_row gt_center">1.71, 1.86</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">CholCheck</td>
-<td headers="estimate" class="gt_row gt_center">3.70</td>
-<td headers="conf.low" class="gt_row gt_center">3.11, 4.42</td>
+<td headers="estimate" class="gt_row gt_center">3.87</td>
+<td headers="conf.low" class="gt_row gt_center">3.25, 4.63</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">BMI</td>
 <td headers="estimate" class="gt_row gt_center">1.08</td>
 <td headers="conf.low" class="gt_row gt_center">1.08, 1.08</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Smoker</td>
-<td headers="estimate" class="gt_row gt_center">0.99</td>
-<td headers="conf.low" class="gt_row gt_center">0.95, 1.03</td>
-<td headers="p.value" class="gt_row gt_center">0.7</td></tr>
+<td headers="estimate" class="gt_row gt_center">1.00</td>
+<td headers="conf.low" class="gt_row gt_center">0.96, 1.04</td>
+<td headers="p.value" class="gt_row gt_center">>0.9</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Stroke</td>
-<td headers="estimate" class="gt_row gt_center">1.18</td>
-<td headers="conf.low" class="gt_row gt_center">1.08, 1.30</td>
+<td headers="estimate" class="gt_row gt_center">1.23</td>
+<td headers="conf.low" class="gt_row gt_center">1.12, 1.35</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">HeartDiseaseorAttack</td>
-<td headers="estimate" class="gt_row gt_center">1.29</td>
-<td headers="conf.low" class="gt_row gt_center">1.21, 1.37</td>
+<td headers="estimate" class="gt_row gt_center">1.27</td>
+<td headers="conf.low" class="gt_row gt_center">1.19, 1.35</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">PhysActivity</td>
 <td headers="estimate" class="gt_row gt_center">0.97</td>
@@ -1471,27 +1493,27 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
 <td headers="p.value" class="gt_row gt_center">0.2</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Fruits</td>
 <td headers="estimate" class="gt_row gt_center">0.96</td>
-<td headers="conf.low" class="gt_row gt_center">0.92, 1.00</td>
-<td headers="p.value" class="gt_row gt_center">0.042</td></tr>
+<td headers="conf.low" class="gt_row gt_center">0.92, 1.01</td>
+<td headers="p.value" class="gt_row gt_center">0.089</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Veggies</td>
-<td headers="estimate" class="gt_row gt_center">0.94</td>
-<td headers="conf.low" class="gt_row gt_center">0.89, 0.99</td>
-<td headers="p.value" class="gt_row gt_center">0.013</td></tr>
+<td headers="estimate" class="gt_row gt_center">0.93</td>
+<td headers="conf.low" class="gt_row gt_center">0.88, 0.98</td>
+<td headers="p.value" class="gt_row gt_center">0.005</td></tr>
     <tr><td headers="label" class="gt_row gt_left">HvyAlcoholConsump</td>
-<td headers="estimate" class="gt_row gt_center">0.47</td>
-<td headers="conf.low" class="gt_row gt_center">0.42, 0.52</td>
+<td headers="estimate" class="gt_row gt_center">0.48</td>
+<td headers="conf.low" class="gt_row gt_center">0.43, 0.53</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">AnyHealthcare</td>
-<td headers="estimate" class="gt_row gt_center">1.08</td>
-<td headers="conf.low" class="gt_row gt_center">0.98, 1.20</td>
-<td headers="p.value" class="gt_row gt_center">0.12</td></tr>
+<td headers="estimate" class="gt_row gt_center">1.07</td>
+<td headers="conf.low" class="gt_row gt_center">0.96, 1.18</td>
+<td headers="p.value" class="gt_row gt_center">0.2</td></tr>
     <tr><td headers="label" class="gt_row gt_left">NoDocbcCost</td>
-<td headers="estimate" class="gt_row gt_center">1.03</td>
-<td headers="conf.low" class="gt_row gt_center">0.96, 1.11</td>
-<td headers="p.value" class="gt_row gt_center">0.4</td></tr>
+<td headers="estimate" class="gt_row gt_center">1.02</td>
+<td headers="conf.low" class="gt_row gt_center">0.95, 1.10</td>
+<td headers="p.value" class="gt_row gt_center">0.6</td></tr>
     <tr><td headers="label" class="gt_row gt_left">GenHlth</td>
-<td headers="estimate" class="gt_row gt_center">1.79</td>
-<td headers="conf.low" class="gt_row gt_center">1.75, 1.84</td>
+<td headers="estimate" class="gt_row gt_center">1.80</td>
+<td headers="conf.low" class="gt_row gt_center">1.76, 1.85</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">MentHlth</td>
 <td headers="estimate" class="gt_row gt_center">1.00</td>
@@ -1502,12 +1524,12 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
 <td headers="conf.low" class="gt_row gt_center">0.99, 0.99</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">DiffWalk</td>
-<td headers="estimate" class="gt_row gt_center">1.14</td>
-<td headers="conf.low" class="gt_row gt_center">1.08, 1.21</td>
+<td headers="estimate" class="gt_row gt_center">1.13</td>
+<td headers="conf.low" class="gt_row gt_center">1.06, 1.19</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Sex</td>
-<td headers="estimate" class="gt_row gt_center">1.32</td>
-<td headers="conf.low" class="gt_row gt_center">1.27, 1.38</td>
+<td headers="estimate" class="gt_row gt_center">1.31</td>
+<td headers="conf.low" class="gt_row gt_center">1.25, 1.36</td>
 <td headers="p.value" class="gt_row gt_center"><0.001</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Age</td>
 <td headers="estimate" class="gt_row gt_center">1.16</td>
@@ -1516,7 +1538,7 @@ tbl_regression(log_glm, exponentiate = TRUE)</code></pre>
     <tr><td headers="label" class="gt_row gt_left">Education</td>
 <td headers="estimate" class="gt_row gt_center">0.97</td>
 <td headers="conf.low" class="gt_row gt_center">0.95, 1.00</td>
-<td headers="p.value" class="gt_row gt_center">0.019</td></tr>
+<td headers="p.value" class="gt_row gt_center">0.022</td></tr>
     <tr><td headers="label" class="gt_row gt_left">Income</td>
 <td headers="estimate" class="gt_row gt_center">0.94</td>
 <td headers="conf.low" class="gt_row gt_center">0.93, 0.95</td>

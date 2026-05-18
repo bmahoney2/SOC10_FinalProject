@@ -13,8 +13,8 @@ navbar:
       href: Results.html
     - text: "Conclusion"
       href: Conclusion.html
-    - text: "Risk Calculator"
-      href: Quiz.html
+    - text: "Risk Calculator Quiz"
+      href: app.R 
 output: 
   html_document:
     theme: flatly
