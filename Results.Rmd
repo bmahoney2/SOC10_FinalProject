@@ -103,7 +103,7 @@ legend("bottomright",
 
 ```
 # Odds Ratio Table
-Lastly, we created a table listing the odds ratio, 95% confidence interval, and p-value for each coefficient in the logistic regression. Since logistic regression computes the log odds of having diabetes, the "exponentiate = TRUE" function converts log odds to an odds ratio (using the Sigmoid function), which allows for greater interpretability. 
+Lastly, we created a table listing the odds ratio, 95% confidence interval, and p-value for each coefficient in the logistic regression. Since logistic regression computes the log odds of having diabetes, the "exponentiate = TRUE" function converts log odds to an odds ratio, which allows for greater interpretability. 
 
 High blood pressure (HighBP), high cholesterol (HighChol), and worse general health (GenHlth) were associated with 2.08x, 1.78x, and 1.8x greater odds of diabetes, respectively. Furthermore, the model suggests that having cholesterol checked increases the odds of developing diabetes by 3.87x. However, this is most likely due to detection bias: unhealthy people are more likely to need a reason to get their cholesterol checked. 
 
