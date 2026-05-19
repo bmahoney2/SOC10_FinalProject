@@ -8,11 +8,11 @@
 library(shiny)
 library(tidymodels)
 library(dplyr)
-
-options(shiny.error = print)
+library(glmnet)
+glmnet::glmnet
 
 # Load the trained lasso model
-model <- readRDS("../lasso_model.rds")
+model <- readRDS("lasso_model.rds")
 
 # make the interface with the following questions 
 ui <- fluidPage(
@@ -74,7 +74,9 @@ ui <- fluidPage(
 
 # Assign values to all 21 features
 # Only use the features from the lasso (impute the rest as zero)
-server <- function(input, output) {
+server <- function(input, output, session) {
+  session$allowReconnect(TRUE)  # add this line
+  
   observeEvent(input$submit, {
     tryCatch({
       new_data <- tibble(

@@ -1,0 +1,10 @@
+name: quiz
+title:
+username: bmahoney2
+account: bmahoney2
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 17375574
+bundleId: 12006057
+url: https://bmahoney2.shinyapps.io/quiz/
+version: 1

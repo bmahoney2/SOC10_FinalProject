@@ -14,7 +14,7 @@ navbar:
     - text: "Conclusion"
       href: Conclusion.html
     - text: "Risk Calculator Quiz"
-      href: app.R 
+      href: "https://bmahoney2.shinyapps.io/quiz"
 output: 
   html_document:
     theme: flatly
