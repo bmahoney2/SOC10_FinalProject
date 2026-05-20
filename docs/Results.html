@@ -334,7 +334,7 @@ div.tocify {
   <a href="Conclusion.html">Conclusion</a>
 </li>
 <li>
-  <a href="Quiz.html">Risk Calculator</a>
+  <a href="https://bmahoney2.shinyapps.io/quiz">Risk Calculator Quiz</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -357,29 +357,9 @@ div.tocify {
 section. More specifically, this includes each model’s predicted
 probabilities, as well as their error rates.</p>
 <pre class="r"><code># Import all libraries
-library(tidymodels)</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────────── tidymodels 1.5.0 ──</code></pre>
-<pre><code>## ✔ broom        1.0.12     ✔ recipes      1.3.2 
-## ✔ dials        1.4.3      ✔ rsample      1.3.2 
-## ✔ dplyr        1.2.1      ✔ tailor       0.1.0 
-## ✔ ggplot2      4.0.3      ✔ tidyr        1.3.2 
-## ✔ infer        1.1.0      ✔ tune         2.1.0 
-## ✔ modeldata    1.5.1      ✔ workflows    1.3.0 
-## ✔ parsnip      1.5.0      ✔ workflowsets 1.1.1 
-## ✔ purrr        1.2.2      ✔ yardstick    1.4.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
-## ✖ purrr::discard() masks scales::discard()
-## ✖ dplyr::filter()  masks stats::filter()
-## ✖ dplyr::lag()     masks stats::lag()
-## ✖ recipes::step()  masks stats::step()</code></pre>
-<pre class="r"><code>library(pROC)</code></pre>
-<pre><code>## Type &#39;citation(&quot;pROC&quot;)&#39; for a citation.</code></pre>
-<pre><code>## 
-## Attaching package: &#39;pROC&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     cov, smooth, var</code></pre>
-<pre class="r"><code>library(dplyr)
+library(tidymodels)
+library(pROC)
+library(dplyr)
 
 # Call back the saved probabilities and ROCs for each model
 # Load data for logistic regression model
@@ -433,23 +413,23 @@ tibble(
                 as.numeric(auc(rf_roc))), 3),
   Accuracy = round(c(log_acc, lasso_acc, rf_acc), 3)
 ) |&gt; gt()</code></pre>
-<div id="dwbedjxcdt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#dwbedjxcdt table {
+<div id="wcyrscrfsc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wcyrscrfsc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#dwbedjxcdt thead, #dwbedjxcdt tbody, #dwbedjxcdt tfoot, #dwbedjxcdt tr, #dwbedjxcdt td, #dwbedjxcdt th {
+#wcyrscrfsc thead, #wcyrscrfsc tbody, #wcyrscrfsc tfoot, #wcyrscrfsc tr, #wcyrscrfsc td, #wcyrscrfsc th {
   border-style: none;
 }
 
-#dwbedjxcdt p {
+#wcyrscrfsc p {
   margin: 0;
   padding: 0;
 }
 
-#dwbedjxcdt .gt_table {
+#wcyrscrfsc .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -475,12 +455,12 @@ tibble(
   border-left-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_caption {
+#wcyrscrfsc .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#dwbedjxcdt .gt_title {
+#wcyrscrfsc .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -492,7 +472,7 @@ tibble(
   border-bottom-width: 0;
 }
 
-#dwbedjxcdt .gt_subtitle {
+#wcyrscrfsc .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -504,7 +484,7 @@ tibble(
   border-top-width: 0;
 }
 
-#dwbedjxcdt .gt_heading {
+#wcyrscrfsc .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -516,13 +496,13 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_bottom_border {
+#wcyrscrfsc .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_col_headings {
+#wcyrscrfsc .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -537,7 +517,7 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_col_heading {
+#wcyrscrfsc .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -557,7 +537,7 @@ tibble(
   overflow-x: hidden;
 }
 
-#dwbedjxcdt .gt_column_spanner_outer {
+#wcyrscrfsc .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -569,15 +549,15 @@ tibble(
   padding-right: 4px;
 }
 
-#dwbedjxcdt .gt_column_spanner_outer:first-child {
+#wcyrscrfsc .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#dwbedjxcdt .gt_column_spanner_outer:last-child {
+#wcyrscrfsc .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#dwbedjxcdt .gt_column_spanner {
+#wcyrscrfsc .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -589,11 +569,11 @@ tibble(
   width: 100%;
 }
 
-#dwbedjxcdt .gt_spanner_row {
+#wcyrscrfsc .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#dwbedjxcdt .gt_group_heading {
+#wcyrscrfsc .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -619,7 +599,7 @@ tibble(
   text-align: left;
 }
 
-#dwbedjxcdt .gt_empty_group_heading {
+#wcyrscrfsc .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -634,15 +614,15 @@ tibble(
   vertical-align: middle;
 }
 
-#dwbedjxcdt .gt_from_md > :first-child {
+#wcyrscrfsc .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#dwbedjxcdt .gt_from_md > :last-child {
+#wcyrscrfsc .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#dwbedjxcdt .gt_row {
+#wcyrscrfsc .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -661,7 +641,7 @@ tibble(
   overflow-x: hidden;
 }
 
-#dwbedjxcdt .gt_stub {
+#wcyrscrfsc .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -674,7 +654,7 @@ tibble(
   padding-right: 5px;
 }
 
-#dwbedjxcdt .gt_stub_row_group {
+#wcyrscrfsc .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -688,15 +668,15 @@ tibble(
   vertical-align: top;
 }
 
-#dwbedjxcdt .gt_row_group_first td {
+#wcyrscrfsc .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#dwbedjxcdt .gt_row_group_first th {
+#wcyrscrfsc .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#dwbedjxcdt .gt_summary_row {
+#wcyrscrfsc .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -706,16 +686,16 @@ tibble(
   padding-right: 5px;
 }
 
-#dwbedjxcdt .gt_first_summary_row {
+#wcyrscrfsc .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_first_summary_row.thick {
+#wcyrscrfsc .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#dwbedjxcdt .gt_last_summary_row {
+#wcyrscrfsc .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -725,7 +705,7 @@ tibble(
   border-bottom-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_grand_summary_row {
+#wcyrscrfsc .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -735,7 +715,7 @@ tibble(
   padding-right: 5px;
 }
 
-#dwbedjxcdt .gt_first_grand_summary_row {
+#wcyrscrfsc .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -745,7 +725,7 @@ tibble(
   border-top-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_last_grand_summary_row_top {
+#wcyrscrfsc .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -755,11 +735,11 @@ tibble(
   border-bottom-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_striped {
+#wcyrscrfsc .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#dwbedjxcdt .gt_table_body {
+#wcyrscrfsc .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -768,7 +748,7 @@ tibble(
   border-bottom-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_footnotes {
+#wcyrscrfsc .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -782,7 +762,7 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_footnote {
+#wcyrscrfsc .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -791,7 +771,7 @@ tibble(
   padding-right: 5px;
 }
 
-#dwbedjxcdt .gt_sourcenotes {
+#wcyrscrfsc .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -805,7 +785,7 @@ tibble(
   border-right-color: #D3D3D3;
 }
 
-#dwbedjxcdt .gt_sourcenote {
+#wcyrscrfsc .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -813,72 +793,72 @@ tibble(
   padding-right: 5px;
 }
 
-#dwbedjxcdt .gt_left {
+#wcyrscrfsc .gt_left {
   text-align: left;
 }
 
-#dwbedjxcdt .gt_center {
+#wcyrscrfsc .gt_center {
   text-align: center;
 }
 
-#dwbedjxcdt .gt_right {
+#wcyrscrfsc .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#dwbedjxcdt .gt_font_normal {
+#wcyrscrfsc .gt_font_normal {
   font-weight: normal;
 }
 
-#dwbedjxcdt .gt_font_bold {
+#wcyrscrfsc .gt_font_bold {
   font-weight: bold;
 }
 
-#dwbedjxcdt .gt_font_italic {
+#wcyrscrfsc .gt_font_italic {
   font-style: italic;
 }
 
-#dwbedjxcdt .gt_super {
+#wcyrscrfsc .gt_super {
   font-size: 65%;
 }
 
-#dwbedjxcdt .gt_footnote_marks {
+#wcyrscrfsc .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#dwbedjxcdt .gt_asterisk {
+#wcyrscrfsc .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#dwbedjxcdt .gt_indent_1 {
+#wcyrscrfsc .gt_indent_1 {
   text-indent: 5px;
 }
 
-#dwbedjxcdt .gt_indent_2 {
+#wcyrscrfsc .gt_indent_2 {
   text-indent: 10px;
 }
 
-#dwbedjxcdt .gt_indent_3 {
+#wcyrscrfsc .gt_indent_3 {
   text-indent: 15px;
 }
 
-#dwbedjxcdt .gt_indent_4 {
+#wcyrscrfsc .gt_indent_4 {
   text-indent: 20px;
 }
 
-#dwbedjxcdt .gt_indent_5 {
+#wcyrscrfsc .gt_indent_5 {
   text-indent: 25px;
 }
 
-#dwbedjxcdt .katex-display {
+#wcyrscrfsc .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#dwbedjxcdt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#wcyrscrfsc div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -942,18 +922,14 @@ conf_mat(
   data = test_data %&gt;% bind_cols(log_preds),
   truth = Diabetes_binary,
   estimate = .pred_class
-)</code></pre>
-<pre><code>##           Truth
-## Prediction    0    1
-##          0 5157 1714
-##          1 1913 5356</code></pre>
-</div>
-<div id="roc-curves" class="section level1">
-<h1>ROC Curves</h1>
-<p>To better visualize each model’s performance, we plotted the ROC
-curve for all three. The Receiver Operating Characteristic (ROC) curve
-depicts each model’s ability by plotting its performance across all
-classification thresholds. To do so, it plots the TPR (Sensitivity)
+) %&gt;%
+  autoplot(type = &quot;heatmap&quot;) +
+  labs(x = &quot;Predicted&quot;, y = &quot;Actual&quot;)</code></pre>
+<p><img src="Results_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" />
+# ROC Curves To better visualize each model’s performance, we plotted
+the ROC curve for all three. The Receiver Operating Characteristic (ROC)
+curve depicts each model’s ability by plotting its performance across
+all classification thresholds. To do so, it plots the TPR (Sensitivity)
 against the FPR (1- Specificity) for all thresholds. Also, the AUC
 measures the total area under the ROC curve, whose numerical values are
 reported in the first table above. As is shown graphically and in the
@@ -962,9 +938,9 @@ results are robust across models.</p>
 <pre class="r"><code># Source: https://rpubs.com/zachbanasik/1302729
 
 # plot all curves on one graph
-plot(log_roc, col = &quot;green&quot;, lwd = 1, main = &quot;ROC Curves Comparison&quot;)
-plot(lasso_roc, col = &quot;red&quot;, lwd = 1, add = TRUE)
-plot(rf_roc, col = &quot;blue&quot;, lwd = 1, add = TRUE)
+plot(log_roc, col = &quot;green&quot;, lwd = 3, main = &quot;ROC Curves Comparison&quot;)
+plot(lasso_roc, col = &quot;red&quot;, lwd = 3, add = TRUE)
+plot(rf_roc, col = &quot;blue&quot;, lwd = 3, add = TRUE)
 legend(&quot;bottomright&quot;, 
        legend = c(&quot;Logistic Regression&quot;, &quot;Lasso&quot;, &quot;Random Forest&quot;),
        col = c(&quot;green&quot;, &quot;red&quot;, &quot;blue&quot;),
@@ -974,8 +950,7 @@ legend(&quot;bottomright&quot;,
 95% confidence interval, and p-value for each coefficient in the
 logistic regression. Since logistic regression computes the log odds of
 having diabetes, the “exponentiate = TRUE” function converts log odds to
-an odds ratio (using the Sigmoid function), which allows for greater
-interpretability.</p>
+an odds ratio, which allows for greater interpretability.</p>
 <p>High blood pressure (HighBP), high cholesterol (HighChol), and worse
 general health (GenHlth) were associated with 2.08x, 1.78x, and 1.8x
 greater odds of diabetes, respectively. Furthermore, the model suggests

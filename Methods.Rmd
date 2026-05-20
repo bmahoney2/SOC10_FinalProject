@@ -98,41 +98,49 @@ saveRDS(lasso_acc, "lasso_acc.rds")
 As a robustness check, we created a random forest model. Random forests create a sequence of decision trees that can capture non-linear relationships between features and outcomes. As shown in the code below, we fit the random forest model using 500 trees and evaluated their performance using 5-fold cross validation. We chose these model parameters to optimize for the model accuracy / running time tradeoff. Importantly, we used the 9 selected features from the lasso model to fit the model. As a result, the model produced the same AUC as logistic regression (0.824), which therefore validates our results. 
 
 ```{r, message = FALSE}
+
 # Source: Course Website
+
+library(doParallel)
+registerDoParallel(parallel::detectCores() - 1)
+
 # create a random forest model
 rf_model <- 
-  rand_forest(trees = 500) %>% 
+  rand_forest(trees = 500, mtry = tune(), min_n = tune()) %>% 
   set_engine("ranger") %>% 
   set_mode("classification")
 
 # define the random forest workflow
 rf_wflow <- 
   workflow() %>% 
-  add_formula(
-    Diabetes_binary ~ HighBP + GenHlth + HighChol + Age + BMI +
-      HeartDiseaseorAttack + CholCheck + Income + HvyAlcoholConsump) %>% 
+  add_formula(Diabetes_binary ~ .) %>% 
   add_model(rf_model)
 
-# fit the random forest model
-rf_fit <- rf_wflow %>% fit(data = train_data)
-
 # set up cross validation
-diabetes_folds <- vfold_cv(train_data, v = 5)
+diabetes_folds <- vfold_cv(train_data, v = 3)
 
 keep_pred <- control_resamples(save_pred = TRUE, save_workflow = TRUE)
+
+rf_grid <- grid_regular(
+  mtry(range = c(2, 10)),
+  min_n(range = c(2, 20)),
+  levels = 3
+)
 
 # create a resample object
 rf_res <- 
   rf_wflow %>% 
-  fit_resamples(resamples = diabetes_folds, control = keep_pred)
+  tune_grid(resamples = diabetes_folds, grid = rf_grid, control = keep_pred)
 
 # examine the metrics across folds
 collect_metrics(rf_res)
 
-# final rf model on test set
-final_rf_res <- last_fit(rf_wflow, splits)
+best_rf <- select_best(rf_res, metric = "roc_auc")
 
-# get final metrics
+final_rf_wflow <- finalize_workflow(rf_wflow, best_rf)
+rf_fit <- final_rf_wflow %>% fit(data = train_data)
+
+final_rf_res <- last_fit(final_rf_wflow, splits)
 collect_metrics(final_rf_res)
 
 # AUC
