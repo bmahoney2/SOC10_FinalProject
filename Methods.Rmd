@@ -95,12 +95,13 @@ saveRDS(lasso_acc, "lasso_acc.rds")
 
 ```
 # Random Forest Model
-As a robustness check, we created a random forest model. Random forests create a sequence of decision trees that can capture non-linear relationships between features and outcomes. As shown in the code below, we fit the random forest model using 500 trees and evaluated their performance using 5-fold cross validation. We chose these model parameters to optimize for the model accuracy / running time tradeoff. Importantly, we used the 9 selected features from the lasso model to fit the model. As a result, the model produced the same AUC as logistic regression (0.824), which therefore validates our results. 
+As a robustness check, we created a random forest model. Random forests create a sequence of decision trees that can capture non-linear relationships between features and outcomes. As shown in the code below, we fit the random forest model using 500 trees and evaluated their performance using 3-fold cross validation (for timing complexity reasons). We chose these model parameters to optimize for the model accuracy / running time tradeoff. Importantly, we added hyperparameters to strengthen our model. At each split, the model randomly considers between 2 and 10 features (mtry), and a node must have between 2 and 20 observations before it can split further (min_n). We then analyzed which combinations of these hyperparameters resulted in the most accurate model. 
 
 ```{r, message = FALSE}
 
 # Source: Course Website
 
+# speed up the computation
 library(doParallel)
 registerDoParallel(parallel::detectCores() - 1)
 
@@ -121,10 +122,11 @@ diabetes_folds <- vfold_cv(train_data, v = 3)
 
 keep_pred <- control_resamples(save_pred = TRUE, save_workflow = TRUE)
 
+# Define hyperparameters to adjust the model
 rf_grid <- grid_regular(
   mtry(range = c(2, 10)),
   min_n(range = c(2, 20)),
-  levels = 3
+  levels = 2
 )
 
 # create a resample object
@@ -135,11 +137,14 @@ rf_res <-
 # examine the metrics across folds
 collect_metrics(rf_res)
 
+# choose hyperparameters with the best AUC
 best_rf <- select_best(rf_res, metric = "roc_auc")
 
+# choose those hyperparameters for final workflow
 final_rf_wflow <- finalize_workflow(rf_wflow, best_rf)
 rf_fit <- final_rf_wflow %>% fit(data = train_data)
 
+# fit the final model
 final_rf_res <- last_fit(final_rf_wflow, splits)
 collect_metrics(final_rf_res)
 
@@ -147,6 +152,10 @@ collect_metrics(final_rf_res)
 rf_probs <- predict(rf_fit, new_data = test_data, type = "prob")
 rf_roc <- roc(test_data$Diabetes_binary, rf_probs$.pred_1)
 print(paste("Random Forest AUC:", round(auc(rf_roc), 3)))
+
+# accuracy
+rf_acc <- mean(predict(rf_fit, test_data)$.pred_class == test_data$Diabetes_binary)
+print(paste("Random Forest Accuracy:", round(rf_acc, 3)))  # ADD THIS
 
 # save model
 saveRDS(rf_fit, "rf_model.rds")
@@ -159,6 +168,7 @@ rf_acc <- mean(predict(rf_fit, test_data)$.pred_class == test_data$Diabetes_bina
 
 ```{r, message = FALSE}
 # save all model metrics
+
 saveRDS(probs, "log_probs.rds")
 saveRDS(predict(lasso_model, new_data = test_data, type = "prob"), "lasso_probs.rds")
 saveRDS(rf_probs, "rf_probs.rds")
