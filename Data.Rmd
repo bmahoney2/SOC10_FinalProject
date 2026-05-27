@@ -28,8 +28,3 @@ table(data$Diabetes_binary)
 
 ```
 
-# Verify data types
-str(data)
-
-# Confirm class balance
-table(data$Diabetes_binary)
