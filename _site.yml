@@ -13,6 +13,8 @@ navbar:
       href: Results.html
     - text: "Conclusion"
       href: Conclusion.html
+    - text: "Contributions"
+      href: Contributions.html
     - text: "Risk Calculator Quiz"
       href: "https://bmahoney2.shinyapps.io/quiz"
 output: 

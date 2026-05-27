@@ -258,6 +258,9 @@ $(document).ready(function () {
   <a href="Conclusion.html">Conclusion</a>
 </li>
 <li>
+  <a href="Contributions.html">Contributions</a>
+</li>
+<li>
   <a href="https://bmahoney2.shinyapps.io/quiz">Risk Calculator Quiz</a>
 </li>
       </ul>
@@ -296,7 +299,8 @@ history. In addition, the dataset includes demographic variables such as
 age group, gender, income, and education level. These variables are
 relevant because public health research has shown strong relationships
 between lifestyle characteristics, socioeconomic status, and diabetes
-risk. More specifically, the dataset was imported into R using the
+risk.</p>
+<p>More specifically, the dataset was imported into R using the
 read.csv() function, while also downloading the tidymodels, dplyr, and
 pROC libraries. Then the target variable, Diabates_binary was converted
 into a factor variable to support binary classification. Moreover, in
@@ -310,45 +314,46 @@ applicable for our research question because it has both medical and
 demographic indicators that are frequently associated with diabetes
 risk. The large sample size improves the reliability of predictive
 models and permits patterns to be identified across a diverse
-population. However, despite this dataset being helpful for predictive
-models, it is important to acknowledge the limitations. First, BRFSS is
-a survey that is self-reported, which ultimately can contain bias or
-inaccurate information. If respondents were to over or underestimate
-their level of physical exercise, eating behaviors, or smoking status,
-the data could be skewed inaccurately. Additionally, the dataset is
-observational instead of being experimental. Hence, the analysis
-conducted can portray correlations among variables and diabetes risk,
-however, we can not draw causation. Lastly, the dataset we are using is
-from 2015, which can be found to be out of date, and inaccurately
-illustrating health trends and the rate of diabetes, which can influence
-the significance of our findings to our current society.</p>
-<p>Data Prep &amp; Cleaning: Since the dataset was already pre-cleaned,
-we verified the following details. First, we ensured there were no
-missing or null values in the dataset. Next, we checked that all data
-types were correctly formatted. Lastly, we made sure the class balance
-between diabetic and non-diabetic observations were balanced. Below is a
-snapshot of the data.</p>
+population.</p>
+<div id="limitations" class="section level1">
+<h1>Limitations:</h1>
+<p>However, despite this dataset being helpful for predictive models, it
+is important to acknowledge the limitations. First, BRFSS is a survey
+that is self-reported, which ultimately can contain bias or inaccurate
+information. If respondents were to over or underestimate their level of
+physical exercise, eating behaviors, or smoking status, the data could
+be skewed inaccurately. Additionally, the dataset is observational
+instead of being experimental. Hence, the analysis conducted can portray
+correlations among variables and diabetes risk, however, we can not draw
+causation. Lastly, the dataset we are using is from 2015, which can be
+found to be out of date, and inaccurately illustrating health trends and
+the rate of diabetes, which can influence the significance of our
+findings to our current society.</p>
+</div>
+<div id="data-prep-cleaning" class="section level1">
+<h1>Data Prep &amp; Cleaning:</h1>
+<p>Since the dataset was already pre-cleaned, we verified the following
+details. First, we ensured there were no missing or null values in the
+dataset. Next, we checked that all data types were correctly formatted.
+Lastly, we made sure the class balance between diabetic and non-diabetic
+observations were balanced. Below is a snapshot of the data.</p>
 <pre class="r"><code># Import the dataset
 data &lt;- read.csv(&quot;/Users/brigettemahoney/Desktop/diabetes_binary_5050split_health_indicators_BRFSS2015.csv&quot;)
 
 # Check for missing values across all variables
 colSums(is.na(data))</code></pre>
-<pre><code>##      Diabetes_binary               HighBP             HighChol 
-##                    0                    0                    0 
-##            CholCheck                  BMI               Smoker 
-##                    0                    0                    0 
-##               Stroke HeartDiseaseorAttack         PhysActivity 
-##                    0                    0                    0 
-##               Fruits              Veggies    HvyAlcoholConsump 
-##                    0                    0                    0 
-##        AnyHealthcare          NoDocbcCost              GenHlth 
-##                    0                    0                    0 
-##             MentHlth             PhysHlth             DiffWalk 
-##                    0                    0                    0 
-##                  Sex                  Age            Education 
-##                    0                    0                    0 
-##               Income 
-##                    0</code></pre>
+<pre><code>##      Diabetes_binary               HighBP             HighChol            CholCheck 
+##                    0                    0                    0                    0 
+##                  BMI               Smoker               Stroke HeartDiseaseorAttack 
+##                    0                    0                    0                    0 
+##         PhysActivity               Fruits              Veggies    HvyAlcoholConsump 
+##                    0                    0                    0                    0 
+##        AnyHealthcare          NoDocbcCost              GenHlth             MentHlth 
+##                    0                    0                    0                    0 
+##             PhysHlth             DiffWalk                  Sex                  Age 
+##                    0                    0                    0                    0 
+##            Education               Income 
+##                    0                    0</code></pre>
 <pre class="r"><code># Verify data types
 str(data)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    70692 obs. of  22 variables:
@@ -379,6 +384,7 @@ table(data$Diabetes_binary)</code></pre>
 <pre><code>## 
 ##     0     1 
 ## 35346 35346</code></pre>
+</div>
 
 
 

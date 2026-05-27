@@ -1,0 +1,24 @@
+---
+title: "Contributions"
+output: html_document
+date: "2026-05-27"
+---
+
+We listed all contributions below. Importantly, all written work was done on a Google Doc and then transferred to GitHub. We all contributed equally to the project and collaborated very well. We also met frequently, attended office hours, and worked very diligently on the project.
+
+## Brigette Mahoney:
+- Built and formatted the website in R Markdown
+- Wrote the methods and results section
+- Created Quiz section 
+
+## Lindsey Devir:
+- Wrote the introduction and motivation section
+- Wrote the data section
+- Collaborated on the presentation slides
+
+## Olivia Leahy:
+- Wrote the conclusion section
+- Wrote the limitations and implications sections
+- Collaborated on the presentation slides
+
+

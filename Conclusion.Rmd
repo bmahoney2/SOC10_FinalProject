@@ -3,20 +3,20 @@ title: "Conclusion"
 output: html_document
 ---
 
-Key Predictors of Diabetes Risk:
+# Key Predictors of Diabetes Risk:
 Our project demonstrates how machine learning can serve as an effective and accessible tool for predicting diabetes risk using common health and demographic indicators. Some of the strongest predictors of diabetes risk that we found across our models include variables such as BMI, age, high blood pressure, physical activity, and general health. As these findings are consistent and align with existing medical and public health research, this reinforces our idea that lifestyle and long-term health conditions play a major role in the development of Type 2 diabetes.
 
-Public Health and Healthcare Implications:
+# Public Health and Healthcare Implications:
 The results of our project have significant implications for both healthcare systems and public health policy, as diabetes affects millions of Americans and contributes to hundreds of billions of dollars in healthcare spending annually. Thus, early detection is crucial in preventing severe complications. Predictive tools like the models we developed in our project can help identify high-risk individuals before they are diagnosed. Additionally, a low-cost digital screening tool based on machine learning increases accessibility for individuals who do not typically visit healthcare providers or have access to expensive medical testing. This type of model could also serve healthcare organizations and policymakers in an effort to target healthcare resources to populations most at risk.
 
-Limitations of the Dataset and Models:
+# Limitations of the Dataset and Models:
 Our findings also highlight several important limitations. First, the BRFSS dataset is based on self-reported survey responses, so some variables may contain reporting bias or inaccuracies. For example, individuals may underestimate unhealthy behaviors such as smoking and overestimate healthy behaviors such as exercise. In addition, since the data is cross-sectional, our model identifies correlations instead of direct causal relationships. Although logistic regression and random forest models can predict diabetes risk, they cannot determine whether or not one factor directly causes diabetes. 
 
-Model Accuracy and Practical Limitations:
+# Model Accuracy and Practical Limitations:
 Another limitation is that the dataset only includes information from 2015. As health behaviors, healthcare access, and demographic trends have likely changed over time and since then, our model may not fully capture current patterns in diabetes risk. Moreover, even though our model performed well overall, no predictive model is perfectly accurate: false positives might inaccurately identify someone as high risk, while false negatives might fail to identify someone who would benefit from early intervention. So, because of these limitations, our model should be viewed exclusively as a preliminary screening tool, rather than a replacement for professional medical diagnosis.
 
-Future Directions and Improvements:
+# Future Directions and Improvements:
 Future research would expand this project in several ways, one being the incorporation of more recent BRFSS data or combining multiple years of survey data. This would improve generalizability and model performance overall. Future studies could also test additional machine learning methods, like gradient boosting or neural networks, to compare prediction accuracy with the models we used in this project. Another next step would be improving the interactivity and usability of the Shiny application. For instance, our quiz could provide personalized suggestions based on the users' responses, such as encouraging more physical activity or regularly monitoring blood pressure.
 
-Conclusion: Machine Learning and Preventative Healthcare
+# Conclusion: Machine Learning and Preventative Healthcare
 In all, our project demonstrates how computational social science and machine learning can be applied to real-world public health challenges. Through combining large-scale survey data with predictive modeling techniques, researchers are able to better understand patterns of disease risk and can create tools that support preventative healthcare. Predictive technologies do raise ethical concerns regarding privacy, bias, and medical decision-making, however they also offer significant opportunities for improving accessibility and awareness. Overall, our findings suggest that machine learning has strong potential as a tool for identifying diabetes risk and supporting early intervention efforts. 
