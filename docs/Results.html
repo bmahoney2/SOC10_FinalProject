@@ -939,10 +939,10 @@ conf_mat(
   autoplot(type = &quot;heatmap&quot;) +
   labs(x = &quot;Predicted&quot;, y = &quot;Actual&quot;)</code></pre>
 <p><img src="Results_files/figure-html/unnamed-chunk-3-1.png" alt="" width="672" />
-# ROC Curves To better visualize each model’s performance, we plotted
-the ROC curve for all three. The Receiver Operating Characteristic (ROC)
-curve depicts each model’s ability by plotting its performance across
-all classification thresholds. To do so, it plots the TPR (Sensitivity)
+To better visualize each model’s performance, we plotted the ROC curve
+for all three. The Receiver Operating Characteristic (ROC) curve depicts
+each model’s ability by plotting its performance across all
+classification thresholds. To do so, it plots the TPR (Sensitivity)
 against the FPR (1- Specificity) for all thresholds. Also, the AUC
 measures the total area under the ROC curve, whose numerical values are
 reported in the first table above. As is shown graphically and in the
@@ -958,12 +958,12 @@ legend(&quot;bottomright&quot;,
        legend = c(&quot;Logistic Regression&quot;, &quot;Lasso&quot;, &quot;Random Forest&quot;),
        col = c(&quot;green&quot;, &quot;red&quot;, &quot;blue&quot;),
        lwd = 6)</code></pre>
-<p><img src="Results_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" />
-# Odds Ratio Table Lastly, we created a table listing the odds ratio,
-95% confidence interval, and p-value for each coefficient in the
-logistic regression. Since logistic regression computes the log odds of
-having diabetes, the “exponentiate = TRUE” function converts log odds to
-an odds ratio, which allows for greater interpretability.</p>
+<p><img src="Results_files/figure-html/unnamed-chunk-4-1.png" alt="" width="672" /></p>
+<p>Lastly, we created a table listing the odds ratio, 95% confidence
+interval, and p-value for each coefficient in the logistic regression.
+Since logistic regression computes the log odds of having diabetes, the
+“exponentiate = TRUE” function converts log odds to an odds ratio, which
+allows for greater interpretability.</p>
 <p>High blood pressure (HighBP), high cholesterol (HighChol), and worse
 general health (GenHlth) were associated with 2.08x, 1.78x, and 1.8x
 greater odds of diabetes, respectively. Furthermore, the model suggests

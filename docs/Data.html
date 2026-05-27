@@ -342,18 +342,14 @@ data &lt;- read.csv(&quot;/Users/brigettemahoney/Desktop/diabetes_binary_5050spl
 
 # Check for missing values across all variables
 colSums(is.na(data))</code></pre>
-<pre><code>##      Diabetes_binary               HighBP             HighChol            CholCheck 
-##                    0                    0                    0                    0 
-##                  BMI               Smoker               Stroke HeartDiseaseorAttack 
-##                    0                    0                    0                    0 
-##         PhysActivity               Fruits              Veggies    HvyAlcoholConsump 
-##                    0                    0                    0                    0 
-##        AnyHealthcare          NoDocbcCost              GenHlth             MentHlth 
-##                    0                    0                    0                    0 
-##             PhysHlth             DiffWalk                  Sex                  Age 
-##                    0                    0                    0                    0 
-##            Education               Income 
-##                    0                    0</code></pre>
+<pre><code>##      Diabetes_binary               HighBP             HighChol            CholCheck                  BMI               Smoker 
+##                    0                    0                    0                    0                    0                    0 
+##               Stroke HeartDiseaseorAttack         PhysActivity               Fruits              Veggies    HvyAlcoholConsump 
+##                    0                    0                    0                    0                    0                    0 
+##        AnyHealthcare          NoDocbcCost              GenHlth             MentHlth             PhysHlth             DiffWalk 
+##                    0                    0                    0                    0                    0                    0 
+##                  Sex                  Age            Education               Income 
+##                    0                    0                    0                    0</code></pre>
 <pre class="r"><code># Verify data types
 str(data)</code></pre>
 <pre><code>## &#39;data.frame&#39;:    70692 obs. of  22 variables:
