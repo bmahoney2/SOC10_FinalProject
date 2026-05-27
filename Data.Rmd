@@ -8,3 +8,15 @@ In this project, we used a cleaned diabetes health indicators dataset derived fr
 More specifically, the dataset was imported into R using the read.csv() function, while also downloading the tidymodels, dplyr, and pROC libraries. Then the target variable, Diabates_binary was converted into a factor variable to support binary classification. Moreover, in order to assess model performance, the data was split into training and testing datasets using the 80/20 train-test split. Additionally, stratified sampling was used in order to maintain the balance of diabetes outcome across both datasets. The functions of head(), summary(), and glimpse() were all used to assess the structure and format of the data prior to modeling. 
 Overall, this dataset is applicable for our research question because it has both medical and demographic indicators that are frequently associated with diabetes risk. The large sample size improves the reliability of predictive models and permits patterns to be identified across a diverse population. 
 However, despite this dataset being helpful for predictive models, it is important to acknowledge the limitations. First, BRFSS is a survey that is self-reported, which ultimately can contain bias or inaccurate information. If respondents were to over or underestimate their level of physical exercise, eating behaviors, or smoking status, the data could be skewed inaccurately. Additionally, the dataset is observational instead of being experimental. Hence, the analysis conducted can portray correlations among variables and diabetes risk, however, we can not draw causation. Lastly, the dataset we are using is from 2015, which can be found to be out of date, and inaccurately illustrating health trends and the rate of diabetes, which can influence the significance of our findings to our current society. 
+
+# Import the dataset
+data <- read.csv("/Users/brigettemahoney/Desktop/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
+
+# Check for missing values across all variables
+colSums(is.na(data))
+
+# Verify data types
+str(data)
+
+# Confirm class balance
+table(data$Diabetes_binary)
