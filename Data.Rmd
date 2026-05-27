@@ -12,11 +12,21 @@ However, despite this dataset being helpful for predictive models, it is importa
 Data Prep & Cleaning:
 Since the dataset was already pre-cleaned, we verified the following details. First, we ensured there were no missing or null values in the dataset. Next, we checked that all data types were correctly formatted. Lastly, we made sure the class balance between diabetic and non-diabetic observations were balanced. Below is a snapshot of the data. 
 
+```{r}
+
 # Import the dataset
 data <- read.csv("/Users/brigettemahoney/Desktop/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
 
 # Check for missing values across all variables
 colSums(is.na(data))
+
+# Verify data types
+str(data)
+
+# Confirm class balance
+table(data$Diabetes_binary)
+
+```
 
 # Verify data types
 str(data)
