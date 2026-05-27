@@ -513,69 +513,98 @@ saveRDS(lasso_acc, &quot;lasso_acc.rds&quot;)</code></pre>
 forests create a sequence of decision trees that can capture non-linear
 relationships between features and outcomes. As shown in the code below,
 we fit the random forest model using 500 trees and evaluated their
-performance using 5-fold cross validation. We chose these model
-parameters to optimize for the model accuracy / running time tradeoff.
-Importantly, we used the 9 selected features from the lasso model to fit
-the model. As a result, the model produced the same AUC as logistic
-regression (0.824), which therefore validates our results.</p>
+performance using 3-fold cross validation (for timing complexity
+reasons). We chose these model parameters to optimize for the model
+accuracy / running time tradeoff. Importantly, we added hyperparameters
+to strengthen our model. At each split, the model randomly considers
+between 2 and 10 features (mtry), and a node must have between 2 and 20
+observations before it can split further (min_n). We then analyzed which
+combinations of these hyperparameters resulted in the most accurate
+model.</p>
 <pre class="r"><code># Source: Course Website
+
+# speed up the computation
+library(doParallel)
+registerDoParallel(parallel::detectCores() - 1)
+
 # create a random forest model
 rf_model &lt;- 
-  rand_forest(trees = 500) %&gt;% 
+  rand_forest(trees = 500, mtry = tune(), min_n = tune()) %&gt;% 
   set_engine(&quot;ranger&quot;) %&gt;% 
   set_mode(&quot;classification&quot;)
 
 # define the random forest workflow
 rf_wflow &lt;- 
   workflow() %&gt;% 
-  add_formula(
-    Diabetes_binary ~ HighBP + GenHlth + HighChol + Age + BMI +
-      HeartDiseaseorAttack + CholCheck + Income + HvyAlcoholConsump) %&gt;% 
+  add_formula(Diabetes_binary ~ .) %&gt;% 
   add_model(rf_model)
 
-# fit the random forest model
-rf_fit &lt;- rf_wflow %&gt;% fit(data = train_data)
-
 # set up cross validation
-diabetes_folds &lt;- vfold_cv(train_data, v = 5)
+diabetes_folds &lt;- vfold_cv(train_data, v = 3)
 
 keep_pred &lt;- control_resamples(save_pred = TRUE, save_workflow = TRUE)
+
+# Define hyperparameters to adjust the model
+rf_grid &lt;- grid_regular(
+  mtry(range = c(2, 10)),
+  min_n(range = c(2, 20)),
+  levels = 2
+)
 
 # create a resample object
 rf_res &lt;- 
   rf_wflow %&gt;% 
-  fit_resamples(resamples = diabetes_folds, control = keep_pred)
+  tune_grid(resamples = diabetes_folds, grid = rf_grid, control = keep_pred)
 
 # examine the metrics across folds
 collect_metrics(rf_res)</code></pre>
-<pre><code>## # A tibble: 3 × 6
-##   .metric     .estimator  mean     n  std_err .config        
-##   &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
-## 1 accuracy    binary     0.747     5 0.00117  pre0_mod0_post0
-## 2 brier_class binary     0.171     5 0.000466 pre0_mod0_post0
-## 3 roc_auc     binary     0.823     5 0.000821 pre0_mod0_post0</code></pre>
-<pre class="r"><code># final rf model on test set
-final_rf_res &lt;- last_fit(rf_wflow, splits)
+<pre><code>## # A tibble: 12 × 8
+##     mtry min_n .metric     .estimator  mean     n  std_err .config        
+##    &lt;int&gt; &lt;int&gt; &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
+##  1     2     2 accuracy    binary     0.750     3 0.00304  pre0_mod1_post0
+##  2     2     2 brier_class binary     0.171     3 0.000386 pre0_mod1_post0
+##  3     2     2 roc_auc     binary     0.826     3 0.00115  pre0_mod1_post0
+##  4     2    20 accuracy    binary     0.751     3 0.00242  pre0_mod2_post0
+##  5     2    20 brier_class binary     0.171     3 0.000331 pre0_mod2_post0
+##  6     2    20 roc_auc     binary     0.827     3 0.00111  pre0_mod2_post0
+##  7    10     2 accuracy    binary     0.736     3 0.00228  pre0_mod3_post0
+##  8    10     2 brier_class binary     0.178     3 0.000655 pre0_mod3_post0
+##  9    10     2 roc_auc     binary     0.808     3 0.00169  pre0_mod3_post0
+## 10    10    20 accuracy    binary     0.745     3 0.00198  pre0_mod4_post0
+## 11    10    20 brier_class binary     0.172     3 0.000512 pre0_mod4_post0
+## 12    10    20 roc_auc     binary     0.820     3 0.00134  pre0_mod4_post0</code></pre>
+<pre class="r"><code># choose hyperparameters with the best AUC
+best_rf &lt;- select_best(rf_res, metric = &quot;roc_auc&quot;)
 
-# get final metrics
+# choose those hyperparameters for final workflow
+final_rf_wflow &lt;- finalize_workflow(rf_wflow, best_rf)
+rf_fit &lt;- final_rf_wflow %&gt;% fit(data = train_data)
+
+# fit the final model
+final_rf_res &lt;- last_fit(final_rf_wflow, splits)
 collect_metrics(final_rf_res)</code></pre>
 <pre><code>## # A tibble: 3 × 4
 ##   .metric     .estimator .estimate .config        
 ##   &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt; &lt;chr&gt;          
-## 1 accuracy    binary         0.744 pre0_mod0_post0
-## 2 roc_auc     binary         0.824 pre0_mod0_post0
-## 3 brier_class binary         0.170 pre0_mod0_post0</code></pre>
+## 1 accuracy    binary         0.748 pre0_mod0_post0
+## 2 roc_auc     binary         0.827 pre0_mod0_post0
+## 3 brier_class binary         0.171 pre0_mod0_post0</code></pre>
 <pre class="r"><code># AUC
 rf_probs &lt;- predict(rf_fit, new_data = test_data, type = &quot;prob&quot;)
 rf_roc &lt;- roc(test_data$Diabetes_binary, rf_probs$.pred_1)
 print(paste(&quot;Random Forest AUC:&quot;, round(auc(rf_roc), 3)))</code></pre>
-<pre><code>## [1] &quot;Random Forest AUC: 0.824&quot;</code></pre>
+<pre><code>## [1] &quot;Random Forest AUC: 0.827&quot;</code></pre>
+<pre class="r"><code># accuracy
+rf_acc &lt;- mean(predict(rf_fit, test_data)$.pred_class == test_data$Diabetes_binary)
+print(paste(&quot;Random Forest Accuracy:&quot;, round(rf_acc, 3)))  # ADD THIS</code></pre>
+<pre><code>## [1] &quot;Random Forest Accuracy: 0.75&quot;</code></pre>
 <pre class="r"><code># save model
 saveRDS(rf_fit, &quot;rf_model.rds&quot;)
 
 # save accuracy values
 rf_acc &lt;- mean(predict(rf_fit, test_data)$.pred_class == test_data$Diabetes_binary)</code></pre>
 <pre class="r"><code># save all model metrics
+
 saveRDS(probs, &quot;log_probs.rds&quot;)
 saveRDS(predict(lasso_model, new_data = test_data, type = &quot;prob&quot;), &quot;lasso_probs.rds&quot;)
 saveRDS(rf_probs, &quot;rf_probs.rds&quot;)
