@@ -9,6 +9,9 @@ More specifically, the dataset was imported into R using the read.csv() function
 Overall, this dataset is applicable for our research question because it has both medical and demographic indicators that are frequently associated with diabetes risk. The large sample size improves the reliability of predictive models and permits patterns to be identified across a diverse population. 
 However, despite this dataset being helpful for predictive models, it is important to acknowledge the limitations. First, BRFSS is a survey that is self-reported, which ultimately can contain bias or inaccurate information. If respondents were to over or underestimate their level of physical exercise, eating behaviors, or smoking status, the data could be skewed inaccurately. Additionally, the dataset is observational instead of being experimental. Hence, the analysis conducted can portray correlations among variables and diabetes risk, however, we can not draw causation. Lastly, the dataset we are using is from 2015, which can be found to be out of date, and inaccurately illustrating health trends and the rate of diabetes, which can influence the significance of our findings to our current society. 
 
+Data Prep & Cleaning:
+Since the dataset was already pre-cleaned, we verified the following details. First, we ensured there were no missing or null values in the dataset. Next, we checked that all data types were correctly formatted. Lastly, we made sure the class balance between diabetic and non-diabetic observations were balanced. Below is a snapshot of the data. 
+
 # Import the dataset
 data <- read.csv("/Users/brigettemahoney/Desktop/diabetes_binary_5050split_health_indicators_BRFSS2015.csv")
 
